@@ -2,7 +2,7 @@ import rl from "readline-sync";
 
 // stat zone
 
-let player = {hp: 100, mp: 100, items: ["HP potion", "MP potion"], weapon: "sword", armor: ["Clothing"]}
+let player = {hp: 100, mp: 100, items: ["HP potion", "MP potion"], items: []}
 
 let itemList = ["chainmail", "steel sword", "dagger", "buckler", "hp potion", "healing fairy", "mana potion","mana fairy", "spear", "helmet", "power necklace", 
 "strength bracelet", "heart crystal","mana crystal", "swift shoes", "posion edge", "mega hammer", "summoning scroll", "ressurection fairy", "smoke bomb"]
@@ -25,7 +25,7 @@ let dItem = () => {
 
 let mapRoller = (num) => {
     if(num === 0 || num === 1) {
-        return "a healing shrine."
+        return "a healing shrine!"
     } else if (num === 2 || num === 3) {
         return "an enemy!"
     } else if (num === 4 || num === 5) {
@@ -49,8 +49,10 @@ let itemSelector = () => {
     while(true){
         let itemChoice = rl.question(`There are two items before you, ${item1} (1) and ${item2} (2), choose one carefully.\n`)
         if(itemChoice === "1") {
+            player.items.push(item1)
             return item1
         } else if (itemChoice === "2") {
+            player.items.push(item2)
             return item2
         }else {
             console.log('invalid command, please type "1" or "2".')
@@ -85,6 +87,25 @@ for (let i = 1; i < 6; i++) {
     console.log(`\nRound ${i}`)
     let mapRoll = (mapSelector())
     console.log(`\nYou proceed throught the dungeon, now walking towards ${mapRoll}`)
+    switch (mapRoll) {
+        case "a healing shrine!":
+            console.log("healing shrine")
+            break
+        case "a Treasure!":
+            let treasure = itemRoller(dItem())
+            console.log(`you come across a treasure chest, you open it.\nRecieved ${treasure}!`)
+            player.items.push(treasure)
+            console.log(player.items)
+            break
+        case "an enemy!":
+            console.log("Enemy battle")
+            break
+        case "a shop!":
+            console.log("welcome to the shop")
+            break
+        case "an Elite enemy!":
+            console.log("Elite battle")
+    }
 }
 
 console.log("final boss")
