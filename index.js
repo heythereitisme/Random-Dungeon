@@ -17,6 +17,10 @@ let d20 = () => {
     return Math.floor(Math.random() * 20)
 }
 
+let dItem = () => {
+    return Math.floor(Math.random() * itemList.length)
+}
+
 // function zone
 
 let mapRoller = (num) => {
@@ -34,30 +38,38 @@ let mapRoller = (num) => {
 }
 
 let itemRoller = (num) => {
-    return itemList[num]
+    let itemReturn = itemList[num]
+    itemList.splice(num, 1)
+    return itemReturn
 }
 
 let itemSelector = () => {
-    let item1 = itemRoller(d20())
-    let item2 = itemRoller(d20())
-    let itemChoice = rl.question(`There are two items before you, ${item1} (1) and ${item2} (2), choose one carefully.\n`)
-    if(itemChoice === "1") {
-        return item1
-    } else if (itemChoice === "2") {
-        return item2
-    }
+    let item1 = itemRoller(dItem())
+    let item2 = itemRoller(dItem())
+    while(true){
+        let itemChoice = rl.question(`There are two items before you, ${item1} (1) and ${item2} (2), choose one carefully.\n`)
+        if(itemChoice === "1") {
+            return item1
+        } else if (itemChoice === "2") {
+            return item2
+        }else {
+            console.log('invalid command, please type "1" or "2".')
+        }}
 }
 
 let mapSelector = () => {
     let leftMap = mapRoller(d10())
     let rightMap = mapRoller(d10())
-    console.log (`To the left is ${leftMap} and to the right is ${rightMap}`)
-    let mapSelection = rl.question("Do you want to get left (L) or right (R)?\n")
-    if (mapSelection === "L") {
-        return leftMap
-    } else if (mapSelection === "R") {
-        return rightMap
-    }
+    console.log (`\nTo the left is ${leftMap} and to the right is ${rightMap}`)
+    while(true){
+        let mapSelection = rl.question("Do you want to get left (L) or right (R)?\n")
+        if (mapSelection === "L") {
+            return leftMap
+        } else if (mapSelection === "R") {
+            return rightMap
+        } else {
+            console.log('invalid command, please type "L" or "R".')
+        }}
 }
 
 // game zone
@@ -68,6 +80,11 @@ let mapSelector = () => {
 
 console.log("At the entrance there is an altar containing two items")
 console.log(itemSelector())
-let mapRoll = (mapSelector())
 
-console.log(`You proceed throught the dungeon, now walking towards ${mapRoll}`)
+for (let i = 1; i < 6; i++) {
+    console.log(`\nRound ${i}`)
+    let mapRoll = (mapSelector())
+    console.log(`\nYou proceed throught the dungeon, now walking towards ${mapRoll}`)
+}
+
+console.log("final boss")
