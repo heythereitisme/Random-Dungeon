@@ -1,12 +1,23 @@
 import rl from "readline-sync";
 
-// console.log("Welcome to Random Dungeon!\n\nYou stand at the entrance of a giant dungeon, with many twisting paths! You have only your sword, 50 gold coins and a handful of potions with you. This will be a tough battle.\n");
-// let playerName = rl.question("What is your name adventurer?");
-// console.log(`\nWelcome to the dungeon ${playerName}, ahead of you lies many paths, choose wisely.`);
+// stat zone
+
+let player = {hp: 100, mp: 100, items: ["HP potion", "MP potion"], weapon: "sword", armor: ["Clothing"]}
+
+let itemList = ["chainmail", "steel sword", "dagger", "buckler", "hp potion", "healing fairy", "mana potion","mana fairy", "spear", "helmet", "power necklace", 
+"strength bracelet", "heart crystal","mana crystal", "swift shoes", "posion edge", "mega hammer", "summoning scroll", "ressurection fairy", "smoke bomb"]
+
+// dice zone
 
 let d10 = () => {
     return Math.floor(Math.random() * 10)
 }
+
+let d20 = () => {
+    return Math.floor(Math.random() * 20)
+}
+
+// function zone
 
 let mapRoller = (num) => {
     if(num === 0 || num === 1) {
@@ -22,6 +33,21 @@ let mapRoller = (num) => {
     }
 }
 
+let itemRoller = (num) => {
+    return itemList[num]
+}
+
+let itemSelector = () => {
+    let item1 = itemRoller(d20())
+    let item2 = itemRoller(d20())
+    let itemChoice = rl.question(`There are two items before you, ${item1} (1) and ${item2} (2), choose one carefully.\n`)
+    if(itemChoice === "1") {
+        return item1
+    } else if (itemChoice === "2") {
+        return item2
+    }
+}
+
 let mapSelector = () => {
     let leftMap = mapRoller(d10())
     let rightMap = mapRoller(d10())
@@ -33,6 +59,15 @@ let mapSelector = () => {
         return rightMap
     }
 }
+
+// game zone
+
+// console.log("Welcome to Random Dungeon!\n\nYou stand at the entrance of a giant dungeon, with many twisting paths! You have only your sword, 50 gold coins and a handful of potions with you. This will be a tough battle.\n");
+// let playerName = rl.question("What is your name adventurer?");
+// console.log(`\nWelcome to the dungeon ${playerName}, ahead of you lies many paths, choose wisely.`);
+
+console.log("At the entrance there is an altar containing two items")
+console.log(itemSelector())
 let mapRoll = (mapSelector())
 
 console.log(`You proceed throught the dungeon, now walking towards ${mapRoll}`)
