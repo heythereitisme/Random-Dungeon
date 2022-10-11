@@ -2,28 +2,28 @@ import rl from "readline-sync";
 
 // stat zone
 
-let player = {hp: 100, maxHP: 100, mp: 100, maxMP: 100, items: ["HP potion", "MP potion"], items: []}
+const player = {hp: 100, maxHP: 100, mp: 100, maxMP: 100, items: ["HP potion", "MP potion"], items: []}
 
-let itemList = ["chainmail", "steel sword", "dagger", "buckler", "hp potion", "healing fairy", "mana potion","mana fairy", "spear", "helmet", "power necklace", 
+const itemList = ["chainmail", "steel sword", "dagger", "buckler", "hp potion", "healing fairy", "mana potion","mana fairy", "spear", "helmet", "power necklace", 
 "strength bracelet", "heart crystal","mana crystal", "swift shoes", "posion edge", "mega hammer", "summoning scroll", "ressurection fairy", "smoke bomb"]
 
 // dice zone
 
-let d10 = () => {
+const d10 = () => {
     return Math.floor(Math.random() * 10)
 }
 
-let d20 = () => {
+const d20 = () => {
     return Math.floor(Math.random() * 20)
 }
 
-let dItem = () => {
+const dItem = () => {
     return Math.floor(Math.random() * itemList.length)
 }
 
 // function zone
 
-let mapRoller = (num) => {
+const mapRoller = (num) => {
     if(num === 0 || num === 1) {
         return "a healing shrine!"
     } else if (num === 2 || num === 3) {
@@ -37,27 +37,29 @@ let mapRoller = (num) => {
     }
 }
 
-let mapReRoller = () => {
+const mapReRoller = () => {
     console.log("\x1b[34mrerolled map\x1b[0m")
         let rightMap = mapRoller(d10())
         return rightMap
 }
 
-let itemRoller = (num) => {
+const itemRoller = (num) => {
     let itemReturn = itemList[num]
     itemList.splice(num, 1)
     return itemReturn
 }
 
-let itemSelector = () => {
+const itemSelector = () => {
     let item1 = itemRoller(dItem())
     let item2 = itemRoller(dItem())
     while(true){
         let itemChoice = rl.question(`There are two items before you, \x1b[36m${item1} (1)\x1b[0m and \x1b[36m${item2} (2)\x1b[0m, choose one carefully.\n`)
         if(itemChoice === "1") {
+            console.log(`Recieved \x1b[36m${item1}\x1b[0m`)
             player.items.push(item1)
             return item1
         } else if (itemChoice === "2") {
+            console.log(`Recieved \x1b[36m${item2}\x1b[0m`)
             player.items.push(item2)
             return item2
         }else {
@@ -65,7 +67,7 @@ let itemSelector = () => {
         }}
 }
 
-let mapSelector = () => {
+const mapSelector = () => {
     let leftMap = mapRoller(d10())
     let rightMap = mapRoller(d10())
     while (leftMap === rightMap) {
@@ -83,7 +85,7 @@ let mapSelector = () => {
         }}
 }
 
-let shopSelector = () => {
+const shopSelector = () => {
     let item1 = itemRoller(dItem())
     let item2 = itemRoller(dItem())
     console.log(`The items for sale are:\nItem 1: \x1b[36m${item1}\x1b[0m - \x1b[33m50g\x1b[0m\nItem 2: \x1b[36m${item2}\x1b[0m - \x1b[33m50g\x1b[0m\n\x1b[32mFull heal\x1b[0m - \x1b[33m100g\x1b[0m`)
@@ -99,7 +101,7 @@ let shopSelector = () => {
                 player.items.push(item2)
                 break
             case "3":
-                console.log("\x1b[32mYou feel healed\x1b[0m")
+                console.log("\x1b[32mYou feel healed.\x1b[0m")
                 player.hp = player.maxHp
                 player.mp = player.maxMP
                 break
@@ -109,7 +111,7 @@ let shopSelector = () => {
         }}
 }
 
-let healShrine = () => {
+const healShrine = () => {
     let healAmount = player.maxHP * 0.3
     player.hp = player.hp + healAmount
     player.mp = player.maxMP
@@ -123,7 +125,8 @@ let healShrine = () => {
 // console.log(`\nWelcome to the dungeon ${playerName}, ahead of you lies many paths, choose wisely.`);
 
 console.log("At the entrance there is an altar containing two items")
-console.log(itemSelector())
+itemSelector()
+console.log("The other item is sealed away.")
 
 for (let i = 1; i < 6; i++) {
     console.log(`\nRound ${i}`)
@@ -137,19 +140,27 @@ for (let i = 1; i < 6; i++) {
             let treasure = itemRoller(dItem())
             console.log(`\x1b[33myou come across a treasure chest, you open it.\x1b[0m\nRecieved \x1b[36m${treasure}\x1b[0m!`)
             player.items.push(treasure)
-            console.log(player.items)
             break
         case "an enemy!":
             console.log("\x1b[31mEnemy battle\x1b[0m")
+            console.log("The enemy was guarding an altar containing two items resmembling the one at the entrance.")
+            itemSelector()
             break
         case "a shop!":
             console.log("You come across a small shop, the shopkeeper gestures towards his wares")
-            console.log(shopSelector())
-            console.log(player.items)
+            shopSelector()
             break
         case "an Elite enemy!":
             console.log("\x1b[31mElite battle\x1b[0m")
+            console.log(`The elite enemy falls, leaving behind two items for you to take.`)
+            let item1 = itemRoller(dItem())
+            let item2 = itemRoller(dItem())
+            console.log(`Received \x1b[36m${item1}\x1b[0m and \x1b[36m${item2}\x1b[0m`)
+            player.items.push(item1)
+            player.items.push(item2)
+    
     }
 }
 
 console.log("\x1b[31mfinal boss\x1b[0m")
+console.log(player.items)
