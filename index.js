@@ -88,22 +88,33 @@ const mapSelector = () => {
 const shopSelector = () => {
     let item1 = itemRoller(dItem())
     let item2 = itemRoller(dItem())
+    let oneBought = false
+    let twoBought = false
+    let threeBought = false
     console.log(`The items for sale are:\nItem 1: \x1b[36m${item1}\x1b[0m - \x1b[33m50g\x1b[0m\nItem 2: \x1b[36m${item2}\x1b[0m - \x1b[33m50g\x1b[0m\n\x1b[32mFull heal\x1b[0m - \x1b[33m100g\x1b[0m`)
       while(true){
         let shopTransaction = rl.question("Would you like to buy item 1 (1), item 2 (2), recieve healing (3) or Exit (4)?\n")
         switch (shopTransaction) {
             case "1":
-                console.log("purchased", item1)
-                player.items.push(item1)
+                if(oneBought === false){
+                    console.log("purchased", item1)
+                    player.items.push(item1)
+                    oneBought = true
+            } else {console.log("You already bought that.")}
                 break
             case "2":
-                console.log("purchased", item2)
-                player.items.push(item2)
+                if(twoBought === false){
+                    console.log("purchased", item1)
+                    player.items.push(item1)
+                    twoBought = true
+            } else {console.log("You already bought that.")}
                 break
             case "3":
-                console.log("\x1b[32mYou feel healed.\x1b[0m")
-                player.hp = player.maxHp
-                player.mp = player.maxMP
+                if(threeBought === false) {
+                    console.log("\x1b[32mYou feel healed.\x1b[0m")
+                    player.hp = player.maxHp
+                    player.mp = player.maxMP
+                } else {console.log("You already bought that.")}
                 break
             case "4":
                 console.log("You leave the shop")
