@@ -47,7 +47,7 @@ let itemSelector = () => {
     let item1 = itemRoller(dItem())
     let item2 = itemRoller(dItem())
     while(true){
-        let itemChoice = rl.question(`There are two items before you, ${item1} (1) and ${item2} (2), choose one carefully.\n`)
+        let itemChoice = rl.question(`There are two items before you, \x1b[36m${item1} (1)\x1b[0m and \x1b[36m${item2} (2)\x1b[0m, choose one carefully.\n`)
         if(itemChoice === "1") {
             player.items.push(item1)
             return item1
@@ -77,7 +77,7 @@ let mapSelector = () => {
 let shopSelector = () => {
     let item1 = itemRoller(dItem())
     let item2 = itemRoller(dItem())
-    console.log(`The items for sale are:\nItem 1: ${item1} - 50g\nItem 2: ${item2} - 50g\nFull heal - 100g`)
+    console.log(`The items for sale are:\nItem 1: \x1b[36m${item1}\x1b[0m - \x1b[33m50g\x1b[0m\nItem 2: \x1b[36m${item2}\x1b[0m - \x1b[33m50g\x1b[0m\n\x1b[32mFull heal\x1b[0m - \x1b[33m100g\x1b[0m`)
       while(true){
         let shopTransaction = rl.question("Would you like to buy item 1 (1), item 2 (2), recieve healing (3) or Exit (4)?\n")
         switch (shopTransaction) {
@@ -119,12 +119,12 @@ for (let i = 1; i < 6; i++) {
             break
         case "a Treasure!":
             let treasure = itemRoller(dItem())
-            console.log(`you come across a treasure chest, you open it.\nRecieved ${treasure}!`)
+            console.log(`\x1b[33myou come across a treasure chest, you open it.\x1b[0m\nRecieved \x1b[36m${treasure}\x1b[0m!`)
             player.items.push(treasure)
             console.log(player.items)
             break
         case "an enemy!":
-            console.log("Enemy battle")
+            console.log("\x1b[31mEnemy battle\x1b[0m")
             break
         case "a shop!":
             console.log("You come across a small shop, the shopkeeper gestures towards his wares")
@@ -132,8 +132,8 @@ for (let i = 1; i < 6; i++) {
             console.log(player.items)
             break
         case "an Elite enemy!":
-            console.log("Elite battle")
+            console.log("\x1b[31mElite battle\x1b[0m")
     }
 }
 
-console.log("final boss")
+console.log("\x1b[31mfinal boss\x1b[0m")
