@@ -14,8 +14,8 @@ __________Items__________
 13) heart crystal: raises max hp by 50
 14) mana crystal: raises max mp by 50
 15) swift shoes: 10% chance of dodge
-16) poison edge: deals flat 5 damage per turn after applied
+16) poison edge: deals flat 10 damage per turn after applied
 17) mega hammer: grants special smash action: 100 mana for 5x damage
-18) summoning scroll: gives summon clone action: deals 25% of your damage
+18) summoning scroll: gives summon clone action: deals 50% of your damage
 19) ressurection fairy: gives you an extra life
 20) smoke bomb: escapes from battle

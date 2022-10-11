@@ -119,6 +119,7 @@ const shopSelector = () => {
             case "4":
                 console.log("You leave the shop")
                 return
+            default: console.log("Invalid command, please try again.")
         }}
 }
 
