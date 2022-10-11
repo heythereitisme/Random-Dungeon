@@ -2,7 +2,7 @@ import rl from "readline-sync";
 
 // stat zone
 
-let player = {hp: 100, mp: 100, items: ["HP potion", "MP potion"], items: []}
+let player = {hp: 100, maxHP: 100, mp: 100, maxMP: 100, items: ["HP potion", "MP potion"], items: []}
 
 let itemList = ["chainmail", "steel sword", "dagger", "buckler", "hp potion", "healing fairy", "mana potion","mana fairy", "spear", "helmet", "power necklace", 
 "strength bracelet", "heart crystal","mana crystal", "swift shoes", "posion edge", "mega hammer", "summoning scroll", "ressurection fairy", "smoke bomb"]
@@ -74,6 +74,32 @@ let mapSelector = () => {
         }}
 }
 
+let shopSelector = () => {
+    let item1 = itemRoller(dItem())
+    let item2 = itemRoller(dItem())
+    console.log(`The items for sale are:\nItem 1: ${item1} - 50g\nItem 2: ${item2} - 50g\nFull heal - 100g`)
+      while(true){
+        let shopTransaction = rl.question("Would you like to buy item 1 (1), item 2 (2), recieve healing (3) or Exit (4)?\n")
+        switch (shopTransaction) {
+            case "1":
+                console.log("purchased", item1)
+                player.items.push(item1)
+                break
+            case "2":
+                console.log("purchased", item2)
+                player.items.push(item2)
+                break
+            case "3":
+                console.log("You feel healed")
+                player.hp = player.maxHp
+                player.mp = player.maxMP
+                break
+            case "4":
+                console.log("You leave the shop")
+                return
+        }}
+}
+
 // game zone
 
 // console.log("Welcome to Random Dungeon!\n\nYou stand at the entrance of a giant dungeon, with many twisting paths! You have only your sword, 50 gold coins and a handful of potions with you. This will be a tough battle.\n");
@@ -101,7 +127,9 @@ for (let i = 1; i < 6; i++) {
             console.log("Enemy battle")
             break
         case "a shop!":
-            console.log("welcome to the shop")
+            console.log("You come across a small shop, the shopkeeper gestures towards his wares")
+            console.log(shopSelector())
+            console.log(player.items)
             break
         case "an Elite enemy!":
             console.log("Elite battle")
