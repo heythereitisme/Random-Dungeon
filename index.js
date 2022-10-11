@@ -37,6 +37,12 @@ let mapRoller = (num) => {
     }
 }
 
+let mapReRoller = () => {
+    console.log("\x1b[34mrerolled map\x1b[0m")
+        let rightMap = mapRoller(d10())
+        return rightMap
+}
+
 let itemRoller = (num) => {
     let itemReturn = itemList[num]
     itemList.splice(num, 1)
@@ -62,7 +68,10 @@ let itemSelector = () => {
 let mapSelector = () => {
     let leftMap = mapRoller(d10())
     let rightMap = mapRoller(d10())
-    console.log (`\nTo the left is ${leftMap} and to the right is ${rightMap}`)
+    while (leftMap === rightMap) {
+        rightMap = mapReRoller()
+    }
+    console.log (`\nTo the left is \x1b[35m${leftMap}\x1b[0m and to the right is \x1b[35m${rightMap}\x1b[0m`)
     while(true){
         let mapSelection = rl.question("Do you want to get left (L) or right (R)?\n")
         if (mapSelection === "L") {
@@ -90,7 +99,7 @@ let shopSelector = () => {
                 player.items.push(item2)
                 break
             case "3":
-                console.log("You feel healed")
+                console.log("\x1b[32mYou feel healed\x1b[0m")
                 player.hp = player.maxHp
                 player.mp = player.maxMP
                 break
@@ -98,6 +107,13 @@ let shopSelector = () => {
                 console.log("You leave the shop")
                 return
         }}
+}
+
+let healShrine = () => {
+    let healAmount = player.maxHP * 0.3
+    player.hp = player.hp + healAmount
+    player.mp = player.maxMP
+    console.log("\x1b[32mYou feel healed.\x1b[0m")
 }
 
 // game zone
@@ -115,7 +131,7 @@ for (let i = 1; i < 6; i++) {
     console.log(`\nYou proceed throught the dungeon, now walking towards ${mapRoll}`)
     switch (mapRoll) {
         case "a healing shrine!":
-            console.log("healing shrine")
+            healShrine()
             break
         case "a Treasure!":
             let treasure = itemRoller(dItem())
