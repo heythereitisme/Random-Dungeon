@@ -110,8 +110,8 @@ const shopSelector = () => {
                 break
             case "2":
                 if(twoBought === false){
-                    console.log("purchased", item1)
-                    player.items.push(item1)
+                    console.log("purchased", item2)
+                    player.items.push(item2)
                     twoBought = true
             } else {console.log("You already bought that.")}
                 break
@@ -120,6 +120,7 @@ const shopSelector = () => {
                     console.log("\x1b[32mYou feel healed.\x1b[0m")
                     player.hp = player.maxHp
                     player.mp = player.maxMP
+                    threeBought = true
                 } else {console.log("You already bought that.")}
                 break
             case "4":
