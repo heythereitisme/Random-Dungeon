@@ -2,10 +2,10 @@ import rl from "readline-sync";
 
 // stat zone
 
-const player = {hp: 100, maxHP: 100, mp: 100, maxMP: 100, items: ["HP potion", "MP potion"], items: []}
+const player = {hp: 100, maxHP: 100, mp: 100, maxMP: 100, items: ["HP potion", "MP potion"], gold: 50}
 
-const itemList = ["chainmail", "steel sword", "dagger", "buckler", "hp potion", "healing fairy", "mana potion","mana fairy", "spear", "helmet", "power necklace", 
-"strength bracelet", "heart crystal","mana crystal", "swift shoes", "posion edge", "mega hammer", "summoning scroll", "ressurection fairy", "smoke bomb"]
+const itemList = ["Chainmail", "Steel Sword", "Dagger", "Buckler", "HP Potion", "Healing fairy", "MP Potion","Mana fairy", "Spear", "Helmet", "Power Necklace", 
+"Strength Bracelet", "Heart Crystal","Mana Crystal", "Swift Shoes", "Posion Edge", "Mega Hammer", "Summoning Scroll", "Ressurection fairy", "Smoke Bomb"]
 
 const enemyList = ["Goblin Warrior", "Goblin Archer", "Goblin Brute", "Vampire", "Golem", "Shield Knight", "Knight", "Assassin", "Dual Blader", "Holy Knight",
 "Fire Mage", "Ice Mage", "Living Bomb", "Flying sword", "Cannoneer", "Armored Knight", "Greatsword Knight", "Ghost", "Mummy", "Quickblader"]
@@ -80,6 +80,7 @@ const mapSelector = () => {
     }
     console.log (`\nTo the left is \x1b[35m${leftMap}\x1b[0m and to the right is \x1b[35m${rightMap}\x1b[0m`)
     while(true){
+        console.log(`You have ${player.gold} gold.`)
         let mapSelection = rl.question("Do you want to get left (L) or right (R)?\n")
         if (mapSelection === "L") {
             return leftMap
@@ -103,24 +104,39 @@ const shopSelector = () => {
         switch (shopTransaction) {
             case "1":
                 if(oneBought === false){
-                    console.log("purchased", item1)
-                    player.items.push(item1)
-                    oneBought = true
+                    if(player.gold >= 50) {
+                        player.gold = player.gold - 50
+                        console.log("purchased", item1)
+                        player.items.push(item1)
+                        oneBought = true
+                    } else {
+                        console.log("You do not have enough gold.")
+                    }
             } else {console.log("You already bought that.")}
                 break
             case "2":
                 if(twoBought === false){
-                    console.log("purchased", item2)
-                    player.items.push(item2)
-                    twoBought = true
+                    if(player.gold >= 50) {
+                        player.gold = player.gold - 50
+                        console.log("purchased", item2)
+                        player.items.push(item2)
+                        twoBought = true
+                    } else {
+                        console.log("You do not have enough gold.")
+                    }
             } else {console.log("You already bought that.")}
                 break
             case "3":
                 if(threeBought === false) {
-                    console.log("\x1b[32mYou feel healed.\x1b[0m")
-                    player.hp = player.maxHp
-                    player.mp = player.maxMP
-                    threeBought = true
+                    if(player.gold >= 100) {
+                        player.gold = player.gold - 100
+                        console.log("\x1b[32mYou feel healed.\x1b[0m")
+                        player.hp = player.maxHp
+                        player.mp = player.maxMP
+                        threeBought = true
+                    } else {
+                        console.log("You do not have enough gold.")
+                    }
                 } else {console.log("You already bought that.")}
                 break
             case "4":
@@ -181,6 +197,7 @@ for (let i = 1; i < 6; i++) {
                 console.log("You won!")
                 console.log("The enemy was guarding an altar containing two items resmembling the one at the entrance.")
                 itemSelector()
+                player.gold = player.gold + 50
                 break
             } else {
                 console.log("\x1b[31mYou have died\nGame Over.\x1b[0m")
@@ -198,6 +215,7 @@ for (let i = 1; i < 6; i++) {
                 console.log(`Received \x1b[36m${item1}\x1b[0m and \x1b[36m${item2}\x1b[0m`)
                 player.items.push(item1)
                 player.items.push(item2)
+                player.gold = player.gold + 100
             } else {
                 console.log("\x1b[31mYou have died\nGame Over.\x1b[0m")
                 break gameLoop
@@ -209,4 +227,4 @@ for (let i = 1; i < 6; i++) {
     }
 }
 
-console.log("final items:", player.items)
+console.log("Final items:", player.items)
