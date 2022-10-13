@@ -140,8 +140,8 @@ const shopSelector = () => {
                     if(player.gold >= 100) {
                         player.gold = player.gold - 100
                         console.log("\x1b[32mYou feel healed.\x1b[0m")
-                        player.hp = player.maxHp
-                        player.mp = player.maxMP
+                        player.hp = player.hp + 150
+                        player.mp = player.mp + 150
                         resourceChecker()
                         threeBought = true
                     } else {
