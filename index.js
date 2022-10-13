@@ -7,6 +7,9 @@ const player = {hp: 100, maxHP: 100, mp: 100, maxMP: 100, items: ["HP potion", "
 const itemList = ["chainmail", "steel sword", "dagger", "buckler", "hp potion", "healing fairy", "mana potion","mana fairy", "spear", "helmet", "power necklace", 
 "strength bracelet", "heart crystal","mana crystal", "swift shoes", "posion edge", "mega hammer", "summoning scroll", "ressurection fairy", "smoke bomb"]
 
+const enemyList = ["Goblin Warrior", "Goblin Archer", "Goblin Brute", "Vampire", "Golem", "Shield Knight", "Knight", "Assassin", "Dual Blader", "Holy Knight",
+"Fire Mage", "Ice Mage", "Living Bomb", "Flying sword", "Cannoneer", "Armored Knight", "Greatsword Knight", "Ghost", "Mummy", "Quickblader"]
+
 // dice zone
 
 const d10 = () => {
@@ -22,6 +25,8 @@ const dItem = () => {
 }
 
 // function zone
+
+let battleResults = true
 
 const mapRoller = (num) => {
     if(num === 0 || num === 1) {
@@ -91,6 +96,7 @@ const shopSelector = () => {
     let oneBought = false
     let twoBought = false
     let threeBought = false
+    console.log("You come across a small shop, the shopkeeper gestures towards his wares")
     console.log(`The items for sale are:\nItem 1: \x1b[36m${item1}\x1b[0m - \x1b[33m50g\x1b[0m\nItem 2: \x1b[36m${item2}\x1b[0m - \x1b[33m50g\x1b[0m\n\x1b[32mFull heal\x1b[0m - \x1b[33m100g\x1b[0m`)
       while(true){
         let shopTransaction = rl.question("Would you like to buy item 1 (1), item 2 (2), recieve healing (3) or Exit (4)?\n")
@@ -130,6 +136,20 @@ const healShrine = () => {
     console.log("\x1b[32mYou feel healed.\x1b[0m")
 }
 
+const enemySelector = (num) => {
+    let enemy = enemyList[num]
+    console.log(`Encountered \x1b[31m${enemy}\x1b[0m`)
+    console.log("\x1b[31mEnemy battle\x1b[0m")
+    return true
+}
+
+const eliteSelector = (num) => {
+    let enemy = enemyList[num]
+    console.log(`Encountered \x1b[31melite ${enemy}\x1b[0m`)
+    console.log("\x1b[31mElite Enemy battle\x1b[0m")
+    return false
+}
+
 // game zone
 
 // console.log("Welcome to Random Dungeon!\n\nYou stand at the entrance of a giant dungeon, with many twisting paths! You have only your sword, 50 gold coins and a handful of potions with you. This will be a tough battle.\n");
@@ -140,6 +160,7 @@ console.log("At the entrance there is an altar containing two items")
 itemSelector()
 console.log("The other item is sealed away.")
 
+gameLoop:
 for (let i = 1; i < 6; i++) {
     console.log(`\nRound ${i}`)
     let mapRoll = (mapSelector())
@@ -154,25 +175,37 @@ for (let i = 1; i < 6; i++) {
             player.items.push(treasure)
             break
         case "an enemy!":
-            console.log("\x1b[31mEnemy battle\x1b[0m")
-            console.log("The enemy was guarding an altar containing two items resmembling the one at the entrance.")
-            itemSelector()
-            break
+            battleResults = enemySelector(d20())
+            if (battleResults === true) {
+                console.log("You won!")
+                console.log("The enemy was guarding an altar containing two items resmembling the one at the entrance.")
+                itemSelector()
+                break
+            } else {
+                console.log("\x1b[31mYou have died\nGame Over.\x1b[0m")
+                break gameLoop
+            }
         case "a shop!":
-            console.log("You come across a small shop, the shopkeeper gestures towards his wares")
             shopSelector()
-            break
+            break 
         case "an Elite enemy!":
-            console.log("\x1b[31mElite battle\x1b[0m")
-            console.log(`The elite enemy falls, leaving behind two items for you to take.`)
-            let item1 = itemRoller(dItem())
-            let item2 = itemRoller(dItem())
-            console.log(`Received \x1b[36m${item1}\x1b[0m and \x1b[36m${item2}\x1b[0m`)
-            player.items.push(item1)
-            player.items.push(item2)
+            battleResults = eliteSelector(d20())
+            if (battleResults === true) {
+                console.log(`The elite enemy falls, leaving behind two items for you to take.`)
+                let item1 = itemRoller(dItem())
+                let item2 = itemRoller(dItem())
+                console.log(`Received \x1b[36m${item1}\x1b[0m and \x1b[36m${item2}\x1b[0m`)
+                player.items.push(item1)
+                player.items.push(item2)
+            } else {
+                console.log("\x1b[31mYou have died\nGame Over.\x1b[0m")
+                break gameLoop
+            }
     
+    }
+    if (i === 5) {
+        console.log("\x1b[31mfinal boss\x1b[0m")
     }
 }
 
-console.log("\x1b[31mfinal boss\x1b[0m")
-console.log(player.items)
+console.log("final items:", player.items)

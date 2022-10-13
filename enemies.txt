@@ -1,0 +1,21 @@
+__________Enemies__________
+1)Goblin warrior - hp 70 - power slash 1.5x damage
+2)Goblin archer - hp 40 - true shot 1.2x damage 10% crit chance
+3)Goblin brute - hp 100 - retaliate 1.5x damage
+4)Vampire - hp 60 - blood suck 1x damage heals self
+5)golem - hp 100 - slam 1.2x damage
+6)shield knight - hp 50 - block next attack
+7)knight - hp 70 - strong will - buffs self 1.3x
+8)assassin - hp 40 - poisoned dagger - 1x damage inflicts poison
+9)dual blader - hp 40 - double strike - attacks twice
+10)holy knight - hp 80 - heal - heals self 10 hp
+11)fire mage - hp 50 - fireball 2x damage
+12)ice mage - hp 60 - ice lance 1.6x damage
+13)living bomb - hp 20 - self destruct 3x damage, dies
+14)flying sword - hp 40 - parry 2x damage
+15)cannoneer - hp 50 - FIRE! 3x damage disables self for 2 turns
+16)armored knight - hp 100 - shoulder tackle 0.2x damage, activates guard
+17)greatsword knight - hp 70 - first move charges, second move great swing 2x damage
+18)ghost - hp 30 - haunt 0.2x damage untargetable next turn
+19)mummy - hp 60 - tangle 0.5x damage added every usage
+20)quickblader - hp 40 - quickblade 1.x damage, gets another turn
