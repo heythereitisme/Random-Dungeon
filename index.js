@@ -28,6 +28,14 @@ const dItem = () => {
 
 let battleResults = true
 
+let resourceChecker = () => {
+    if (player.hp > player.maxHP) {
+        player.hp = player.maxHP
+    }
+    if (player.mp > player.maxMP){
+        player.mp = player.maxMP
+    }}
+
 const mapRoller = (num) => {
     if(num === 0 || num === 1) {
         return "a healing shrine!"
@@ -81,6 +89,7 @@ const mapSelector = () => {
     console.log (`\nTo the left is \x1b[35m${leftMap}\x1b[0m and to the right is \x1b[35m${rightMap}\x1b[0m`)
     while(true){
         console.log(`You have ${player.gold} gold.`)
+        console.log(`You have ${player.hp} health.`)
         let mapSelection = rl.question("Do you want to get left (L) or right (R)?\n")
         if (mapSelection === "L") {
             return leftMap
@@ -133,6 +142,7 @@ const shopSelector = () => {
                         console.log("\x1b[32mYou feel healed.\x1b[0m")
                         player.hp = player.maxHp
                         player.mp = player.maxMP
+                        resourceChecker()
                         threeBought = true
                     } else {
                         console.log("You do not have enough gold.")
@@ -150,6 +160,7 @@ const healShrine = () => {
     let healAmount = player.maxHP * 0.3
     player.hp = player.hp + healAmount
     player.mp = player.maxMP
+    resourceChecker()
     console.log("\x1b[32mYou feel healed.\x1b[0m")
 }
 
@@ -157,20 +168,30 @@ const enemySelector = (num) => {
     let enemy = enemyList[num]
     console.log(`Encountered \x1b[31m${enemy}\x1b[0m`)
     console.log("\x1b[31mEnemy battle\x1b[0m")
-    return true
+    player.hp = player.hp - 25
+    if(player.hp > 0) {
+        return true
+    }else { 
+        return false
+    }
 }
 
 const eliteSelector = (num) => {
     let enemy = enemyList[num]
     console.log(`Encountered \x1b[31melite ${enemy}\x1b[0m`)
     console.log("\x1b[31mElite Enemy battle\x1b[0m")
-    return false
+    player.hp = player.hp - 50
+    if(player.hp > 0) {
+        return true
+    }else { 
+        return false
+    }
 }
 
 // game zone
 
 // console.log("Welcome to Random Dungeon!\n\nYou stand at the entrance of a giant dungeon, with many twisting paths! You have only your sword, 50 gold coins and a handful of potions with you. This will be a tough battle.\n");
-// let playerName = rl.question("What is your name adventurer?");
+// let playerName = rl.question("What is your name adventurer?\n");
 // console.log(`\nWelcome to the dungeon ${playerName}, ahead of you lies many paths, choose wisely.`);
 
 console.log("At the entrance there is an altar containing two items")
@@ -198,6 +219,7 @@ for (let i = 1; i < 6; i++) {
                 console.log("The enemy was guarding an altar containing two items resmembling the one at the entrance.")
                 itemSelector()
                 player.gold = player.gold + 50
+                
                 break
             } else {
                 console.log("\x1b[31mYou have died\nGame Over.\x1b[0m")
