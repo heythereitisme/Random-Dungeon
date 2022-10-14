@@ -120,6 +120,7 @@ const shopSelector = () => {
                         oneBought = true
                     } else {
                         console.log("You do not have enough gold.")
+                        break
                     }
             } else {console.log("You already bought that.")}
                 break
@@ -132,6 +133,7 @@ const shopSelector = () => {
                         twoBought = true
                     } else {
                         console.log("You do not have enough gold.")
+                        break
                     }
             } else {console.log("You already bought that.")}
                 break
@@ -144,8 +146,10 @@ const shopSelector = () => {
                         player.mp = player.mp + 150
                         resourceChecker()
                         threeBought = true
+                        break
                     } else {
                         console.log("You do not have enough gold.")
+                        break
                     }
                 } else {console.log("You already bought that.")}
                 break
@@ -187,6 +191,8 @@ const eliteSelector = (num) => {
         return false
     }
 }
+
+const battleTime = (enemy) =>
 
 // game zone
 
