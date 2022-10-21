@@ -1,5 +1,6 @@
 import rl from "readline-sync"
-import {player, itemList, enemyList, d10, d20, dItem} from "./variables-objects.js"
+import {itemList, enemyList, d10, d20, dItem} from "./variables-objects.js"
+import {itemCheck, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset} from "./server-functions.js"
 
 let resourceChecker = () => {
     if (player.hp > player.maxHP) {
@@ -35,25 +36,25 @@ const itemRoller = (num) => {
     return itemReturn
 }
 
-const itemSelector = () => {
+const itemSelector = async() => {
     let item1 = itemRoller(dItem())
     let item2 = itemRoller(dItem())
     while(true){
         let itemChoice = rl.question(`There are two items before you, \x1b[36m${item1} (1)\x1b[0m and \x1b[36m${item2} (2)\x1b[0m, choose one carefully.\n`)
         if(itemChoice === "1") {
             console.log(`Recieved \x1b[36m${item1}\x1b[0m`)
-            player.items.push(item1)
+            await itemPusher(item1)
             return item1
         } else if (itemChoice === "2") {
             console.log(`Recieved \x1b[36m${item2}\x1b[0m`)
-            player.items.push(item2)
+            await itemPusher(item2)
             return item2
         }else {
             console.log('invalid command, please type "1" or "2".')
         }}
 }
 
-const mapSelector = () => {
+const mapSelector = async() => {
     let leftMap = mapRoller(d10())
     let rightMap = mapRoller(d10())
     while (leftMap === rightMap) {
@@ -61,8 +62,8 @@ const mapSelector = () => {
     }
     console.log (`\nTo the left is \x1b[35m${leftMap}\x1b[0m and to the right is \x1b[35m${rightMap}\x1b[0m`)
     while(true){
-        console.log(`You have ${player.gold} gold.`)
-        console.log(`You have ${player.hp} health.`)
+        console.log(`You have ${await goldCheck()} gold.`)
+        console.log(`You have ${await healthCheck()} health.`)
         let mapSelection = rl.question("Do you want to get left (L) or right (R)?\n")
         if (mapSelection === "L") {
             return leftMap
@@ -73,7 +74,7 @@ const mapSelector = () => {
         }}
 }
 
-const shopSelector = () => {
+const shopSelector = async() => {
     let item1 = itemRoller(dItem())
     let item2 = itemRoller(dItem())
     let oneBought = false
@@ -86,10 +87,10 @@ const shopSelector = () => {
         switch (shopTransaction) {
             case "1":
                 if(oneBought === false){
-                    if(player.gold >= 50) {
-                        player.gold = player.gold - 50
+                    if(await goldCheck() >= 50) {
+                        console.log(await spend(50))
                         console.log("purchased", item1)
-                        player.items.push(item1)
+                        itemPusher(item1)
                         oneBought = true
                     } else {
                         console.log("You do not have enough gold.")
@@ -98,10 +99,10 @@ const shopSelector = () => {
                 break
             case "2":
                 if(twoBought === false){
-                    if(player.gold >= 50) {
-                        player.gold = player.gold - 50
+                    if(await goldCheck() >= 50) {
+                        console.log(await spend(50))
                         console.log("purchased", item2)
-                        player.items.push(item2)
+                        itemPusher(item2)
                         twoBought = true
                     } else {
                         console.log("You do not have enough gold.")
@@ -110,12 +111,9 @@ const shopSelector = () => {
                 break
             case "3":
                 if(threeBought === false) {
-                    if(player.gold >= 100) {
-                        player.gold = player.gold - 100
-                        console.log("\x1b[32mYou feel healed.\x1b[0m")
-                        player.hp = player.hp + 150
-                        player.mp = player.mp + 150
-                        resourceChecker()
+                    if(await goldCheck() >= 100) {
+                        console.log(await spend(100))
+                        console.log(await healing(100))
                         threeBought = true
                     } else {
                         console.log("You do not have enough gold.")
@@ -129,36 +127,30 @@ const shopSelector = () => {
         }}
 }
 
-const healShrine = () => {
-    let healAmount = player.maxHP * 0.3
-    player.hp = player.hp + healAmount
-    player.mp = player.maxMP
-    resourceChecker()
-    console.log("\x1b[32mYou feel healed.\x1b[0m")
-}
 
-const enemySelector = (num) => {
+
+const enemySelector = async(num) => {
     let enemy = enemyList[num]
     console.log(`Encountered \x1b[31m${enemy}\x1b[0m`)
     console.log("\x1b[31mEnemy battle\x1b[0m")
-    player.hp = player.hp - 25
-    if(player.hp > 0) {
+    console.log(await damage(25))
+    if(await healthCheck() > 0) {
         return true
     }else { 
         return false
     }
 }
 
-const eliteSelector = (num) => {
+const eliteSelector = async(num) => {
     let enemy = enemyList[num]
     console.log(`Encountered \x1b[31melite ${enemy}\x1b[0m`)
     console.log("\x1b[31mElite Enemy battle\x1b[0m")
-    player.hp = player.hp - 50
-    if(player.hp > 0) {
+    console.log(await damage(50))
+    if(await healthCheck() > 0) {
         return true
     }else { 
         return false
     }
 }
 
-export {eliteSelector, enemySelector, healShrine, shopSelector, mapSelector, itemSelector, itemRoller, mapReRoller, mapRoller, resourceChecker}
+export {eliteSelector, enemySelector, shopSelector, mapSelector, itemSelector, itemRoller, mapReRoller, mapRoller, resourceChecker}

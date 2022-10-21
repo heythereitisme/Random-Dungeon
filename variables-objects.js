@@ -1,5 +1,3 @@
-const player = {hp: 100, maxHP: 100, mp: 100, maxMP: 100, items: ["HP potion", "MP potion"], gold: 50}
-
 const itemList = ["Chainmail", "Steel Sword", "Dagger", "Buckler", "HP Potion", "Healing fairy", "MP Potion","Mana fairy", "Spear", "Helmet", "Power Necklace", 
 "Strength Bracelet", "Heart Crystal","Mana Crystal", "Swift Shoes", "Posion Edge", "Mega Hammer", "Summoning Scroll", "Ressurection fairy", "Smoke Bomb"]
 
@@ -18,4 +16,4 @@ const dItem = () => {
     return Math.floor(Math.random() * itemList.length)
 }
 
-export {player, itemList, enemyList, d10, d20, dItem,}
+export {itemList, enemyList, d10, d20, dItem}
