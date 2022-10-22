@@ -1,6 +1,7 @@
 import {eliteSelector, enemySelector, shopSelector, mapSelector, itemSelector, itemRoller, mapReRoller, mapRoller, resourceChecker} from "./game-flow-functions.js"
 import {d10, d20, dItem} from "./variables-objects.js"
 import {itemCheck, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset} from "./server-functions.js"
+import {battleTime} from "./battle.js"
 
 let battleResults;
 
@@ -27,7 +28,8 @@ let theGame = async() => {
                 break
             case "a Treasure!":
                 let treasure = itemRoller(dItem())
-                console.log(`\x1b[33myou come across a treasure chest, you open it.\x1b[0m\nRecieved \x1b[36m${treasure}\x1b[0m!`)
+                console.log(`\x1b[33myou come across a treasure chest, you open it.\x1b[0m\nRecieved \x1b[36m${treasure}\x1b[0m and \x1b[33m50 gold!\x1b[0m`)
+                await mint(50)
                 await itemPusher(treasure)
                 break
             case "an enemy!":

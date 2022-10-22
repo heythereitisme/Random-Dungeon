@@ -25,7 +25,6 @@ const mapRoller = (num) => {
 }
 
 const mapReRoller = () => {
-    console.log("\x1b[34mrerolled map\x1b[0m")
         let rightMap = mapRoller(d10())
         return rightMap
 }

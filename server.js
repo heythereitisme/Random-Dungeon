@@ -32,12 +32,12 @@ app.get("/reset", (req, res) => {
     res.send()
 })
 
-app.get("/printHP", (req, res) => {
+app.get("/checkHP", (req, res) => {
     console.log("HP:", player.hp)
     res.send(''+player.hp)
 })
 
-app.get("/printGold", (req, res) => {
+app.get("/checkGold", (req, res) => {
     console.log("gold:", player.gold)
     res.send(''+player.gold)
 })

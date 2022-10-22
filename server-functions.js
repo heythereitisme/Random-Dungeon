@@ -5,13 +5,13 @@ let resourceReset = async() => {
 }
 
 let healthCheck = async() => {
-    let serverReq = await fetch("http://localhost:4000/printHP")
+    let serverReq = await fetch("http://localhost:4000/checkHP")
     let healthAmount = await serverReq.text()
     return +healthAmount
 }
 
 let goldCheck = async() => {
-    let serverReq = await fetch("http://localhost:4000/printGold")
+    let serverReq = await fetch("http://localhost:4000/checkGold")
     let goldAmount = await serverReq.text()
     return +goldAmount
 }
