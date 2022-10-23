@@ -37,6 +37,11 @@ app.get("/checkHP", (req, res) => {
     res.send(''+player.hp)
 })
 
+app.get("/checkMP", (req, res) => {
+    console.log("MP:", player.mp)
+    res.send(''+player.mp)
+})
+
 app.get("/checkGold", (req, res) => {
     console.log("gold:", player.gold)
     res.send(''+player.gold)
@@ -64,9 +69,16 @@ app.get("/damage", (req, res) => {
     console.log("pre damage hp:", player.hp)
     let amount = req.query.amount
     player.hp = player.hp - +amount
-    resourceChecker()
     console.log("post damage hp:", player.hp)
     res.send(`\x1b[31mOw! ${amount} hp lost!\x1b[0m`)
+})
+
+app.get("/spendMana", (req, res) => {
+    console.log("pre spell mp:", player.mp)
+    let amount = req.query.amount
+    player.mp = player.mp - +amount
+    console.log("post spell mp:", player.mp)
+    res.send(`\x1b[36mspent ${amount} mana\x1b[0m`)
 })
 
 app.get("/mint", (req, res) => {

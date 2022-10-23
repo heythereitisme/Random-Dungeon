@@ -10,6 +10,12 @@ let healthCheck = async () => {
   return +healthAmount;
 };
 
+let manaCheck = async () => {
+    let serverReq = await fetch("http://localhost:4000/checkMP");
+    let manaAmount = await serverReq.text();
+    return +manaAmount;
+  };
+
 let goldCheck = async () => {
   let serverReq = await fetch("http://localhost:4000/checkGold");
   let goldAmount = await serverReq.text();
@@ -52,4 +58,10 @@ let itemCheck = async () => {
   return items;
 };
 
-export {itemCheck, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset}
+let spendMana = async (v) => {
+    let serverReq = await fetch(`http://localhost:4000/spendMana?amount=${v}`);
+    let manaSpent = await serverReq.text();
+    return manaSpent
+}
+
+export {manaCheck, spendMana, itemCheck, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset}
