@@ -1,5 +1,5 @@
-import { damage, healthCheck, manaCheck, spendMana } from "./server-functions.js";
-import { d20, enemyList } from "./variables-objects.js";
+import { checkItem, countItem, damage, healing, healthCheck, manaCheck, recoverMana, spendMana, useItem } from "./server-functions.js";
+import { d20, enemyList, itemList } from "./variables-objects.js";
 import rl from "readline-sync";
 
 const skillMenu = ["Power Slash", "Power Charge"]
@@ -9,6 +9,9 @@ let playerDefFlag = false;
 let enemyDefFlag = false;
 let enemy;
 let enemyHP;
+let hpPots = []
+let mpPots = []
+let smokeBombs = []
 
 let enemyBlockChecker = (av) => {
   if (enemyDefFlag === true) {
@@ -47,7 +50,7 @@ const battleTime = async (num, e) => {
     console.log("Your HP:", await healthCheck());
     console.log("Your MP:", await manaCheck());
     let playerPhase = rl.question(
-      "Do you want to attack (1), defend (2) or use skill (3)?\n"
+      "Do you want to attack (1), defend (2), use a skill (3) or use an item (4)?\n"
     );
     if (playerPhase === "1") {
       let attackValue = playerBattleRoll();
@@ -96,7 +99,36 @@ const battleTime = async (num, e) => {
           } else if (skillMenu === "3") continue battleloop;
         }
       }
-    } else {
+    } else if (playerPhase === "4"){
+        hpPots = await countItem("HP Potion")
+        mpPots = await countItem("MP Potion")
+        smokeBombs = await countItem("Smoke Bomb")
+        while(true){
+        let itemInput = rl.question(`Do you want to use HP Potions - ${hpPots} owned (1), MP Potions - ${mpPots} owned (2), Smoke Bomb - ${smokeBombs} owned (3) or return to previous menu (4)?`)
+        if(itemInput === "1") {
+            if(await checkItem("HP Potion") === "true") {
+                console.log(await healing(50))
+                await useItem("HP Potion")
+                break
+            } else {console.log("No HP Potions.")}
+        } else if(itemInput === "2"){
+            if(await checkItem("MP Potion") === "true") {
+                console.log(await recoverMana(50))
+                await useItem("MP Potion")
+                break
+            } else {console.log("No MP Potions.")}
+        } else if(itemInput === "3"){
+            if(await checkItem("Smoke Bomb") === "true") {
+                console.log("escaped")
+                await useItem("Smoke Bomb")
+                return true
+            } else {console.log("No HP Potions.")}
+        } else if(itemInput === "4") {
+            continue battleloop
+        } else {
+
+        }}
+    }else {
       console.log("Invalid command please try again");
       continue battleloop;
     }

@@ -56,4 +56,4 @@ const dItem = () => {
   return Math.floor(Math.random() * itemList.length);
 };
 
-export { itemList, enemyList, d10, d20, dItem };
+export {itemList, enemyList, d10, d20, dItem };

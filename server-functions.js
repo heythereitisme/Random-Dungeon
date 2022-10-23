@@ -52,7 +52,7 @@ let mint = async (v) => {
   return moneyMessage;
 };
 
-let itemCheck = async () => {
+let printItems = async () => {
   let serverReq = await fetch("http://localhost:4000/itemPrint");
   let items = await serverReq.json();
   return items;
@@ -65,8 +65,26 @@ let spendMana = async (v) => {
 }
 
 let recoverMana = async (v) => {
-    let serverReq = await fetch(`http://localhost:4000/recoverMana?amount=${v}`);
+    await fetch(`http://localhost:4000/recoverMana?amount=${v}`);
     return
   };
 
-export {recoverMana, manaCheck, spendMana, itemCheck, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset}
+let checkItem = async(v) => {
+    let serverReq = await fetch(`http://localhost:4000/checkItem?item=${v}`)
+    let checkedItem = await serverReq.text()
+    return checkedItem
+}
+
+let countItem = async(v) => {
+    let serverReq = await fetch(`http://localhost:4000/countItem?item=${v}`)
+    let countedItem = await serverReq.text()
+    return countedItem
+  }  
+
+let useItem = async(v) => {
+    let serverReq = await fetch(`http://localhost:4000/useItem?item=${v}`)
+    let usedItem = serverReq.text()
+    return usedItem
+}
+
+export {useItem, countItem, checkItem, recoverMana, manaCheck, spendMana, printItems, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset}

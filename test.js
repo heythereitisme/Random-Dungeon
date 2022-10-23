@@ -1,7 +1,7 @@
-import fetch from "node-fetch"
+import { checkItem, countItem } from "./server-functions.js"
 
 let testFunction = async() => {
-    return(await fetch("http://localhost:4000/checkHP").text())
+    return(await countItem("HP Potion"))
 }
 
-testFunction()
+console.log(await testFunction())

@@ -1,9 +1,9 @@
-import express, { response } from "express";
+import express, { query, response } from "express";
 const app = express();
 
 const PORT = process.env.PORT || 4000
 
-const player = {hp: 100, maxHP: 100, mp: 100, maxMP: 100, items: ["HP potion", "MP potion"], gold: 50}
+const player = {hp: 100, maxHP: 100, mp: 100, maxMP: 100, items: ["HP Potion", "MP Potion"], gold: 50}
 const itemList = ["Chainmail", "Steel Sword", "Dagger", "Buckler", "HP Potion", "Healing fairy", "MP Potion","Mana fairy", "Spear", "Helmet", "Power Necklace", 
 "Strength Bracelet", "Heart Crystal","Mana Crystal", "Swift Shoes", "Posion Edge", "Mega Hammer", "Summoning Scroll", "Ressurection fairy", "Smoke Bomb"]
 const enemyList = ["Goblin Warrior", "Goblin Archer", "Goblin Brute", "Vampire", "Golem", "Shield Knight", "Knight", "Assassin", "Dual Blader", "Holy Knight",
@@ -45,6 +45,20 @@ app.get("/checkMP", (req, res) => {
 app.get("/checkGold", (req, res) => {
     console.log("gold:", player.gold)
     res.send(''+player.gold)
+})
+
+app.get("/checkItem", (req, res) => {
+    let item = req.query.item
+    let checkedItem = player.items.includes(item)
+    console.log(`${item} in inventory: ${checkedItem}`)
+    res.send(checkedItem)
+})
+
+app.get("/countItem", (req, res) => {
+    let item = req.query.item
+    let countedItem = player.items.filter(name => name.includes(item)).length
+    console.log(`${countedItem} ${item}(s)`)
+    res.send(''+countedItem)
 })
 
 app.get("/itemPush", (req, res) => {
@@ -106,4 +120,11 @@ app.get("/recoverMana", (req, res) => {
     resourceChecker()
     console.log("post recovery mp:", player.mp)
     res.send()
+})
+
+app.get("/useItem", (req, res) => {
+    let item = req.query.item
+    let itemIndex = player.items.indexOf(item)
+    let killItem = player.items.splice(itemIndex, 1)
+    res.send(`Used ${killItem}`)
 })

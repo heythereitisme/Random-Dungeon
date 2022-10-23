@@ -1,6 +1,6 @@
 import {shopSelector, mapSelector, itemSelector, itemRoller, mapReRoller, mapRoller, resourceChecker} from "./game-flow-functions.js"
 import {d10, d20, dItem} from "./variables-objects.js"
-import {itemCheck, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset, recoverMana} from "./server-functions.js"
+import {printItems, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset, recoverMana} from "./server-functions.js"
 import rl from "readline-sync"
 import { battleTime } from "./battle.js";
 
@@ -75,7 +75,7 @@ let theGame = async () => {
     }
   }
 
-  console.log("Final items:", await itemCheck());
+  console.log("Final items:", await printItems());
 };
 
 theGame();
