@@ -1,5 +1,5 @@
 import { checkItem, countItem, damage, healing, healthCheck, manaCheck, recoverMana, spendMana, useItem } from "./server-functions.js";
-import { d20, enemyList, itemList } from "./variables-objects.js";
+import { d20, enemyList} from "./variables-objects.js";
 import rl from "readline-sync";
 
 const skillMenu = ["Power Slash", "Power Charge"]
@@ -104,7 +104,7 @@ const battleTime = async (num, e) => {
         mpPots = await countItem("MP Potion")
         smokeBombs = await countItem("Smoke Bomb")
         while(true){
-        let itemInput = rl.question(`Do you want to use HP Potions - ${hpPots} owned (1), MP Potions - ${mpPots} owned (2), Smoke Bomb - ${smokeBombs} owned (3) or return to previous menu (4)?`)
+        let itemInput = rl.question(`Do you want to use HP Potions - ${hpPots} owned (1), MP Potions - ${mpPots} owned (2), Smoke Bomb - ${smokeBombs} owned (3) or return to previous menu (4)?\n`)
         if(itemInput === "1") {
             if(await checkItem("HP Potion") === "true") {
                 console.log(await healing(50))

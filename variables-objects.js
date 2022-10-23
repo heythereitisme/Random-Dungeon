@@ -42,6 +42,7 @@ const enemyList = [
   { name: "Ghost", hp: 30 },
   { name: "Mummy", hp: 60 },
   { name: "Quickblader", hp: 40 },
+  { name: "Dungeon Ogre", hp: 400}
 ];
 
 const d10 = () => {

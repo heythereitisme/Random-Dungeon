@@ -72,6 +72,13 @@ let theGame = async () => {
     }
     if (i === 5) {
       console.log("\x1b[31mfinal boss\x1b[0m");
+      let finalBattle = await battleTime(20)
+      if(finalBattle === true) {
+        console.log("You win!")
+      }else {
+        console.log("\x1b[31mYou have died\nGame Over.\x1b[0m");
+        break gameLoop;
+      }
     }
   }
 
