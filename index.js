@@ -1,6 +1,6 @@
 import {shopSelector, mapSelector, itemSelector, itemRoller, mapReRoller, mapRoller, resourceChecker} from "./game-flow-functions.js"
 import {d10, d20, dItem} from "./variables-objects.js"
-import {itemCheck, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset} from "./server-functions.js"
+import {itemCheck, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset, recoverMana} from "./server-functions.js"
 import rl from "readline-sync"
 import { battleTime } from "./battle.js";
 
@@ -25,6 +25,7 @@ let theGame = async () => {
     );
     switch (mapRoll) {
       case "a healing shrine!":
+        await recoverMana(50)
         console.log(await healing(30));
         break;
       case "a Treasure!":

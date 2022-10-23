@@ -64,4 +64,9 @@ let spendMana = async (v) => {
     return manaSpent
 }
 
-export {manaCheck, spendMana, itemCheck, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset}
+let recoverMana = async (v) => {
+    let serverReq = await fetch(`http://localhost:4000/recoverMana?amount=${v}`);
+    return
+  };
+
+export {recoverMana, manaCheck, spendMana, itemCheck, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset}

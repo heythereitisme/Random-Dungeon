@@ -1,7 +1,7 @@
 import rl from "readline-sync";
 import { itemList, enemyList, d10, d20, dItem } from "./variables-objects.js";
 import {
-  itemCheck, mint, spend, damage, healing,  itemPusher,  goldCheck, healthCheck, resourceReset,} from "./server-functions.js";
+  itemCheck, mint, spend, damage, healing,  itemPusher,  goldCheck, healthCheck, resourceReset, recoverMana,} from "./server-functions.js";
 
 let resourceChecker = () => {
   if (player.hp > player.maxHP) {
@@ -133,6 +133,7 @@ const shopSelector = async () => {
           if ((await goldCheck()) >= 100) {
             console.log(await spend(100));
             console.log(await healing(100));
+            await recoverMana(100)
             threeBought = true;
           } else {
             console.log("You do not have enough gold.");

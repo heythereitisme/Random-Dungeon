@@ -98,3 +98,12 @@ app.get("/itemPrint", (req, res) => {
     console.log("printing items")
     res.send(player.items)
 })
+
+app.get("/recoverMana", (req, res) => {
+    console.log("pre recovered mp:", player.mp)
+    let amount = req.query.amount
+    player.mp = player.mp + +amount
+    resourceChecker()
+    console.log("post recovery mp:", player.mp)
+    res.send()
+})
