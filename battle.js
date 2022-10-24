@@ -1,4 +1,4 @@
-import { checkItem, countItem, damage, healing, healthCheck, manaCheck, recoverMana, spendMana, useItem } from "./server-functions.js";
+import { checkItem, countItem, damage, healing, healthCheck, manaCheck, recoverMana, res, spendMana, useItem } from "./server-functions.js";
 import { d10, d20, dCoin, enemyList} from "./variables-objects.js";
 import rl from "readline-sync";
 
@@ -12,6 +12,8 @@ let enemyHP;
 let hpPots = []
 let mpPots = []
 let smokeBombs = []
+let poison;
+let clone = false;
 
 let enemyBlockChecker = (dv) => {
   if (enemyDefFlag === true) {
@@ -31,11 +33,17 @@ const playerBattleRoll = async() => {
     if (chargeFlag === true) {
         if(await checkItem("Power Necklace") === "true") {
             console.log("\x1b[35mYour Power Necklace improved your charge!\x1b[0m")
-            dv = Math.round(dv * 3);
+            dv = Math.round(dv * 2.5);
         } else {
         dv = Math.round(dv * 2);
     }}
 chargeFlag = false
+if(poison === false) {
+  if(await checkItem("Poison Edge") === "true"){
+    console.log(`\x1b[32mThe ${enemy} is poisoned!\x1b[0m`)
+    poison = true
+  }
+}
 return Math.round(dv)
 };
 
@@ -53,7 +61,7 @@ const damageReduction = async(dv) => {
         dv = Math.round(dv * 0.8)
     }
     if (playerDefFlag === true) {
-        console.log("\x1b[35mBlocked!\x1b[0m");
+        console.log("\x1b[35mBlocking!\x1b[0m");
         dv = Math.round(dv * 0.2);
       }
     return dv
@@ -67,6 +75,8 @@ const battleTime = async (num, e) => {
     enemy = enemyList[num].name;
     enemyHP = enemyList[num].hp;
   }
+  poison = false
+  clone = false
   console.log(`Encountered \x1b[31m${enemy}\x1b[0m`);
   battleloop: while (true) {
     playerDefFlag = false;
@@ -85,7 +95,13 @@ const battleTime = async (num, e) => {
         if(dCoin() === 0){
         console.log(`\x1b[35mYour dagger slices true. Dealt ${attackValue} damage\x1b[0m`)
         enemyHP = enemyHP - attackValue;
-      }}
+      }
+      if(clone === true){
+        let cloneAttack = Math.round(attackValue * 0.5)
+        console.log(`\x1b[35mYour clone attacks dealing ${cloneAttack} damage!\x1b[0m`)
+        enemyHP = enemyHP - cloneAttack
+      }
+    }
     } else if (playerPhase === "2") {
       console.log("defending");
       playerDefFlag = true;
@@ -96,7 +112,8 @@ const battleTime = async (num, e) => {
       if (skillNumbers === 2) {
         while (true) {
           let skillMenu = rl.question(
-            `Do you want to use ${skill1} - 25 mana (1), ${skill2} - 25 mana (2) or go back to attack menu (3)?\n`
+            `\nDo you want to use ${skill1} - 25 mana (1), ${skill2} - 25 mana (2), Mega Smash - needs mega hammer - 100 mana (3), 
+            Summon Clone - needs Summoning Scroll - 50 mana (4), or go back to attack menu (5)?\n`
           );
           if (skillMenu === "1") {
             if ((await manaCheck()) >= 25) {
@@ -105,13 +122,18 @@ const battleTime = async (num, e) => {
               let attackValue;
               if(await checkItem("Strength Bracelet") === "true") {
                 console.log("\x1b[35mYour Strength Bracelet improves your swing!\x1b[0m")
-                attackValue = await playerBattleRoll() * 2.5
+                attackValue = Math.round(await playerBattleRoll() * 2.5)
               } else {
-                attackValue = await playerBattleRoll() * 2;
+                attackValue = Math.round(await playerBattleRoll() * 2);
               }
               attackValue = enemyBlockChecker(attackValue);
               console.log(`\x1b[35mDealt ${attackValue} damage\x1b[0m`);
               enemyHP = enemyHP - attackValue;
+              if(clone === true){
+                let cloneAttack = Math.round(attackValue * 0.5)
+                console.log(`\x1b[35mYour clone attacks dealing ${cloneAttack} damage!\x1b[0m`)
+                enemyHP = enemyHP - cloneAttack
+              }
               break;
             } else {
               console.log("You do not have enough mana.");
@@ -131,7 +153,35 @@ const battleTime = async (num, e) => {
             } else {
               console.log("Power Charge already active.");
             }
-          } else if (skillMenu === "3") continue battleloop;
+          } else if (skillMenu === "3"){
+            if(await checkItem("Mega Hammer") === "true"){
+              if(await manaCheck() >= 100) {
+                console.log(await spendMana(100));
+                console.log(`Used Mega Smash!`);
+                let attackValue = Math.round(await playerBattleRoll() * 6)
+                attackValue = enemyBlockChecker(attackValue);
+                console.log(`\x1b[35mDealt ${attackValue} damage\x1b[0m`);
+                enemyHP = enemyHP - attackValue;
+                if(clone === true){
+                  let cloneAttack = Math.round(attackValue * 0.5)
+                  console.log(`\x1b[35mYour clone attacks dealing ${cloneAttack} damage!\x1b[0m`)
+                  enemyHP = enemyHP - cloneAttack
+                }
+                break
+              } else {console.log("You do not have enough mana.");}
+            }else {console.log("You do not have the Mega Hammer")}
+          } else if (skillMenu === "4"){
+            if(await checkItem("Summoning Scroll") === "true"){
+              if(clone === false){
+                if(await manaCheck() >= 50) {
+                  console.log(await spendMana(50));
+                  console.log("\x1b[35mYou summon a magical clone!\x1b[0m")
+                  clone = true
+                  break
+                }else {console.log("You do not have enough mana.")}
+              } else {console.log("Clone already active.")}
+            }else {console.log("You do not have the Summoning Scroll")}
+          } else if (skillMenu === "5") continue battleloop;
         }
       }
     } else if (playerPhase === "4"){
@@ -176,12 +226,19 @@ const battleTime = async (num, e) => {
             }}
     }
     if (enemyHP > 0) {
+      let enemydamage = 0;
       console.log("\x1b[31mEnemy turn\x1b[0m");
       enemyDefFlag = false;
       let enemyMove = enemyRoll();
       if (enemyMove === 0 || enemyMove === 1) {
         console.log("\x1b[31menemy attacks\x1b[0m");
-        let enemydamage = enemyBattleRoll();
+        if(enemy === "Dungeon Ogre") {
+          console.log("e")
+          enemydamage = Math.round(enemyBattleRoll() * 1.5);
+        } else {
+          enemydamage = enemyBattleRoll();
+        }
+        
         enemydamage = await damageReduction(enemydamage);
         console.log(await damage(enemydamage));
       } else if (enemyMove === 2) {
@@ -189,14 +246,31 @@ const battleTime = async (num, e) => {
         enemyDefFlag = true;
       } else if (enemyMove === 3) {
         console.log("\x1b[31menemy special\x1b[0m");
-        let enemydamage = Math.round(enemyBattleRoll() * 1.2);
+        if(enemy === "Dungeon Ogre") {
+          console.log("e")
+          enemydamage = Math.round(enemyBattleRoll() * 1.5);
+        } else {
+          enemydamage = enemyBattleRoll();
+        }
+        enemydamage = Math.round(enemydamage * 1.2);
         enemydamage = await damageReduction(enemydamage);
         console.log(await damage(enemydamage));
       }
     } else {
       return true;
     }
+    if(poison === true) {
+      enemyHP = enemyHP - 10
+      console.log(`\x1b[32mThe ${enemy} takes 10 poison damage!\x1b[0m`)
+      if(enemyHP <= 0) {return true}
+    }
+
     if ((await healthCheck()) <= 0) {
+      if(await checkItem("Ressurection fairy") === "true"){
+        console.log(await res())
+        await useItem("Ressurection fairy")
+        continue
+      }
       return false;
     }
   }

@@ -1,4 +1,5 @@
 import fetch from "node-fetch";
+import { d10 } from "./variables-objects.js";
 
 let resourceReset = async () => {
   await fetch("http://localhost:4000/reset");
@@ -53,9 +54,20 @@ let healing = async (v) => {
 };
 
 let damage = async (v) => {
-  let serverReq = await fetch(`http://localhost:4000/damage?amount=${v}`);
-  let damageMessage = await serverReq.text();
-  return damageMessage;
+  if(await checkItem("Swift Shoes") === "true"){
+    if(d10() === 0) {
+        return("\x1b[35mDodged!\x1b[0m")
+    } else {
+        let serverReq = await fetch(`http://localhost:4000/damage?amount=${v}`);
+        let damageMessage = await serverReq.text();
+        return damageMessage;
+    }
+  } else {
+        let serverReq = await fetch(`http://localhost:4000/damage?amount=${v}`);
+        let damageMessage = await serverReq.text();
+        return damageMessage;
+  }
+  
 };
 
 let spend = async (v) => {
@@ -118,4 +130,10 @@ let manaCrystal = async() => {
     return itemMessage
 }
 
-export {manaCrystal, heartCrystal, useItem, countItem, checkItem, recoverMana, manaCheck, spendMana, printItems, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset}
+let res = async() => {
+    let serverReq = await fetch('http://localhost:4000/res')
+    let resMessage = await serverReq.text()
+    return resMessage
+}
+
+export {res, manaCrystal, heartCrystal, useItem, countItem, checkItem, recoverMana, manaCheck, spendMana, printItems, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset}

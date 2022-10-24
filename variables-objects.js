@@ -14,7 +14,7 @@ const itemList = [
   "Heart Crystal",
   "Mana Crystal",
   "Swift Shoes",
-  "Posion Edge",
+  "Poison Edge",
   "Mega Hammer",
   "Summoning Scroll",
   "Ressurection fairy",
@@ -42,7 +42,7 @@ const enemyList = [
   { name: "Ghost", hp: 30 },
   { name: "Mummy", hp: 60 },
   { name: "Quickblader", hp: 40 },
-  { name: "Dungeon Ogre", hp: 400}
+  { name: "Dungeon Ogre", hp: 500}
 ];
 
 const dCoin = () => {
