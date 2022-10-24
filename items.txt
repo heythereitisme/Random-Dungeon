@@ -3,10 +3,10 @@ __________Items__________
 2) steel sword: 1.3x damage dealt
 3) dagger: 50% chance of double normal attack
 4) buckler: 20% chance of auto block at end of player turn
-5) hp potion: heals 30% of hp whenever you want
-6) healing fairy: instantly heals 60% of hp
-7) mana potion: heals 50% of mp whenever you want
-8) mana fairy: heals 100% of mp instantly
+5) hp potion: heals 50 hp whenever you want
+6) healing fairy: instantly heals 75hp
+7) mana potion: heals 50 mp whenever you want
+8) mana fairy: heals 100 mp instantly
 9) spear: 1.3x damage dealt
 10) helmet: 0.8x damage taken
 11) power necklace: improves power charge to 2.5x damage done

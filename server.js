@@ -1,14 +1,10 @@
 import express, { query, response } from "express";
-import { healing } from "./server-functions.js";
 const app = express();
 
 const PORT = process.env.PORT || 4000
 
 const player = {hp: 100, maxHP: 100, mp: 100, maxMP: 100, items: ["HP Potion", "MP Potion"], gold: 50}
-const itemList = ["Chainmail", "Steel Sword", "Dagger", "Buckler", "HP Potion", "Healing fairy", "MP Potion", "Mana fairy", "Spear", "Helmet", "Power Necklace", 
-"Strength Bracelet", "Heart Crystal","Mana Crystal", "Swift Shoes", "Posion Edge", "Mega Hammer", "Summoning Scroll", "Ressurection fairy", "Smoke Bomb"]
-const enemyList = ["Goblin Warrior", "Goblin Archer", "Goblin Brute", "Vampire", "Golem", "Shield Knight", "Knight", "Assassin", "Dual Blader", "Holy Knight",
-"Fire Mage", "Ice Mage", "Living Bomb", "Flying sword", "Cannoneer", "Armored Knight", "Greatsword Knight", "Ghost", "Mummy", "Quickblader"]
+
 
 app.listen(PORT, function() {
     console.log(`listening on port ${PORT}`)

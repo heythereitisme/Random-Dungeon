@@ -1,4 +1,4 @@
-import { checkItem, countItem, damage, healing, healthCheck, manaCheck, recoverMana, res, spendMana, useItem } from "./server-functions.js";
+import { checkItem, countItem, damage, healing, healthCheck, manaCheck, printItems, recoverMana, res, spendMana, useItem } from "./server-functions.js";
 import { d10, d20, dCoin, enemyList} from "./variables-objects.js";
 import rl from "readline-sync";
 
@@ -84,7 +84,7 @@ const battleTime = async (num, e) => {
     console.log("Your HP:", await healthCheck());
     console.log("Your MP:", await manaCheck());
     let playerPhase = rl.question(
-      "Do you want to attack (1), defend (2), use a skill (3) or use an item (4)?\n"
+      "Do you want to attack (1), defend (2), use a skill (3), use an item (4) or show your equipment(5)?\n"
     );
     if (playerPhase === "1") {
       let attackValue = await playerBattleRoll();
@@ -95,13 +95,12 @@ const battleTime = async (num, e) => {
         if(dCoin() === 0){
         console.log(`\x1b[35mYour dagger slices true. Dealt ${attackValue} damage\x1b[0m`)
         enemyHP = enemyHP - attackValue;
-      }
+      }}
       if(clone === true){
         let cloneAttack = Math.round(attackValue * 0.5)
         console.log(`\x1b[35mYour clone attacks dealing ${cloneAttack} damage!\x1b[0m`)
         enemyHP = enemyHP - cloneAttack
       }
-    }
     } else if (playerPhase === "2") {
       console.log("defending");
       playerDefFlag = true;
@@ -213,7 +212,10 @@ const battleTime = async (num, e) => {
         } else {
 
         }}
-    }else {
+    }else if(playerPhase === "5") {
+      console.log(await printItems())
+      continue battleloop;
+    } else {
       console.log("Invalid command please try again");
       continue battleloop;
     }
@@ -233,7 +235,6 @@ const battleTime = async (num, e) => {
       if (enemyMove === 0 || enemyMove === 1) {
         console.log("\x1b[31menemy attacks\x1b[0m");
         if(enemy === "Dungeon Ogre") {
-          console.log("e")
           enemydamage = Math.round(enemyBattleRoll() * 1.5);
         } else {
           enemydamage = enemyBattleRoll();
@@ -247,7 +248,6 @@ const battleTime = async (num, e) => {
       } else if (enemyMove === 3) {
         console.log("\x1b[31menemy special\x1b[0m");
         if(enemy === "Dungeon Ogre") {
-          console.log("e")
           enemydamage = Math.round(enemyBattleRoll() * 1.5);
         } else {
           enemydamage = enemyBattleRoll();
