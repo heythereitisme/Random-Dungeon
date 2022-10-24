@@ -1,5 +1,5 @@
 import { checkItem, countItem, damage, healing, healthCheck, manaCheck, recoverMana, spendMana, useItem } from "./server-functions.js";
-import { d20, enemyList} from "./variables-objects.js";
+import { d10, d20, dCoin, enemyList} from "./variables-objects.js";
 import rl from "readline-sync";
 
 const skillMenu = ["Power Slash", "Power Charge"]
@@ -13,20 +13,30 @@ let hpPots = []
 let mpPots = []
 let smokeBombs = []
 
-let enemyBlockChecker = (av) => {
+let enemyBlockChecker = (dv) => {
   if (enemyDefFlag === true) {
     console.log("\x1b[31mYour attack was blocked!\x1b[0m");
-    return Math.round(av * 0.5);
-  } else return av;
+    return Math.round(dv * 0.5);
+  } else return dv;
 };
 
-const playerBattleRoll = () => {
+const playerBattleRoll = async() => {
   let dv = 10 + d20();
-  if (chargeFlag === true) {
-    dv = dv * 2;
-    chargeFlag = false;
-  }
-  return dv;
+  if(await checkItem("Steel Sword") === "true") {
+        dv = Math.round(dv * 1.3)
+    }
+    if(await checkItem("Spear") === "true") {
+        dv = Math.round(dv * 1.3)
+    }
+    if (chargeFlag === true) {
+        if(await checkItem("Power Necklace") === "true") {
+            console.log("\x1b[35mYour Power Necklace improved your charge!\x1b[0m")
+            dv = Math.round(dv * 3);
+        } else {
+        dv = Math.round(dv * 2);
+    }}
+chargeFlag = false
+return Math.round(dv)
 };
 
 let enemyBattleRoll = () => {
@@ -34,6 +44,20 @@ let enemyBattleRoll = () => {
 };
 
 const enemyRoll = () => Math.floor(Math.random() * 4);
+
+const damageReduction = async(dv) => {
+    if(await checkItem("Chainmail") === "true") {
+        dv = Math.round(dv * 0.8)
+    }
+    if(await checkItem("Helmet") === "true") {
+        dv = Math.round(dv * 0.8)
+    }
+    if (playerDefFlag === true) {
+        console.log("\x1b[35mBlocked!\x1b[0m");
+        dv = Math.round(dv * 0.2);
+      }
+    return dv
+}
 
 const battleTime = async (num, e) => {
   if (e === true) {
@@ -53,10 +77,15 @@ const battleTime = async (num, e) => {
       "Do you want to attack (1), defend (2), use a skill (3) or use an item (4)?\n"
     );
     if (playerPhase === "1") {
-      let attackValue = playerBattleRoll();
+      let attackValue = await playerBattleRoll();
       attackValue = enemyBlockChecker(attackValue);
       console.log(`\x1b[35mDealt ${attackValue} damage\x1b[0m`);
       enemyHP = enemyHP - attackValue;
+      if(await checkItem("Dagger") === "true") {
+        if(dCoin() === 0){
+        console.log(`\x1b[35mYour dagger slices true. Dealt ${attackValue} damage\x1b[0m`)
+        enemyHP = enemyHP - attackValue;
+      }}
     } else if (playerPhase === "2") {
       console.log("defending");
       playerDefFlag = true;
@@ -73,7 +102,13 @@ const battleTime = async (num, e) => {
             if ((await manaCheck()) >= 25) {
               console.log(await spendMana(25));
               console.log(`Used ${skill1}!`);
-              let attackValue = playerBattleRoll() * 2;
+              let attackValue;
+              if(await checkItem("Strength Bracelet") === "true") {
+                console.log("\x1b[35mYour Strength Bracelet improves your swing!\x1b[0m")
+                attackValue = await playerBattleRoll() * 2.5
+              } else {
+                attackValue = await playerBattleRoll() * 2;
+              }
               attackValue = enemyBlockChecker(attackValue);
               console.log(`\x1b[35mDealt ${attackValue} damage\x1b[0m`);
               enemyHP = enemyHP - attackValue;
@@ -86,7 +121,7 @@ const battleTime = async (num, e) => {
               if ((await manaCheck()) >= 25) {
                 console.log(await spendMana(25));
                 console.log(
-                  `\x1b[35mUsed ${skill2}! Your next attack's power will be doubled!\x1b[0m`
+                  `\x1b[35mUsed ${skill2}! Your next attack's power will be increased!\x1b[0m`
                 );
                 chargeFlag = true;
                 break;
@@ -132,6 +167,14 @@ const battleTime = async (num, e) => {
       console.log("Invalid command please try again");
       continue battleloop;
     }
+    if(await checkItem("Buckler") === "true"){
+        let bucklerRoll = d10()
+        if(playerDefFlag === false){
+            if(bucklerRoll === 0 || bucklerRoll === 1) {
+                console.log("\x1b[35mYou block automatically!\x1b[0m")
+                playerDefFlag = true
+            }}
+    }
     if (enemyHP > 0) {
       console.log("\x1b[31mEnemy turn\x1b[0m");
       enemyDefFlag = false;
@@ -139,10 +182,7 @@ const battleTime = async (num, e) => {
       if (enemyMove === 0 || enemyMove === 1) {
         console.log("\x1b[31menemy attacks\x1b[0m");
         let enemydamage = enemyBattleRoll();
-        if (playerDefFlag === true) {
-          console.log("\x1b[35mBlocked!\x1b[0m");
-          enemydamage = Math.round(enemydamage * 0.2);
-        }
+        enemydamage = await damageReduction(enemydamage);
         console.log(await damage(enemydamage));
       } else if (enemyMove === 2) {
         console.log("\x1b[31menemy defends\x1b[0m");
@@ -150,10 +190,7 @@ const battleTime = async (num, e) => {
       } else if (enemyMove === 3) {
         console.log("\x1b[31menemy special\x1b[0m");
         let enemydamage = Math.round(enemyBattleRoll() * 1.2);
-        if (playerDefFlag === true) {
-          console.log("\x1b[35mBlocked!\x1b[0m");
-          enemydamage = Math.round(enemydamage * 0.2);
-        }
+        enemydamage = await damageReduction(enemydamage);
         console.log(await damage(enemydamage));
       }
     } else {

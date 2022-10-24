@@ -104,7 +104,7 @@ const shopSelector = async () => {
           if ((await goldCheck()) >= 50) {
             console.log(await spend(50));
             console.log("purchased", item1);
-            itemPusher(item1);
+            await itemPusher(item1);
             oneBought = true;
           } else {
             console.log("You do not have enough gold.");
@@ -118,7 +118,7 @@ const shopSelector = async () => {
           if ((await goldCheck()) >= 50) {
             console.log(await spend(50));
             console.log("purchased", item2);
-            itemPusher(item2);
+            await itemPusher(item2);
             twoBought = true;
           } else {
             console.log("You do not have enough gold.");
@@ -131,8 +131,8 @@ const shopSelector = async () => {
         if (threeBought === false) {
           if ((await goldCheck()) >= 100) {
             console.log(await spend(100));
-            console.log(await healing(100));
-            await recoverMana(100)
+            console.log(await healing(150));
+            await recoverMana(150)
             threeBought = true;
           } else {
             console.log("You do not have enough gold.");

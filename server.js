@@ -1,10 +1,11 @@
 import express, { query, response } from "express";
+import { healing } from "./server-functions.js";
 const app = express();
 
 const PORT = process.env.PORT || 4000
 
 const player = {hp: 100, maxHP: 100, mp: 100, maxMP: 100, items: ["HP Potion", "MP Potion"], gold: 50}
-const itemList = ["Chainmail", "Steel Sword", "Dagger", "Buckler", "HP Potion", "Healing fairy", "MP Potion","Mana fairy", "Spear", "Helmet", "Power Necklace", 
+const itemList = ["Chainmail", "Steel Sword", "Dagger", "Buckler", "HP Potion", "Healing fairy", "MP Potion", "Mana fairy", "Spear", "Helmet", "Power Necklace", 
 "Strength Bracelet", "Heart Crystal","Mana Crystal", "Swift Shoes", "Posion Edge", "Mega Hammer", "Summoning Scroll", "Ressurection fairy", "Smoke Bomb"]
 const enemyList = ["Goblin Warrior", "Goblin Archer", "Goblin Brute", "Vampire", "Golem", "Shield Knight", "Knight", "Assassin", "Dual Blader", "Holy Knight",
 "Fire Mage", "Ice Mage", "Living Bomb", "Flying sword", "Cannoneer", "Armored Knight", "Greatsword Knight", "Ghost", "Mummy", "Quickblader"]
@@ -72,7 +73,6 @@ app.get("/itemPush", (req, res) => {
 app.get("/healing", (req, res) => {
     console.log("pre heal hp:", player.hp)
     let amount = req.query.amount
-    console.log("heal amount is", amount)
     player.hp = player.hp + +amount
     resourceChecker()
     console.log("post heal hp:", player.hp)
@@ -119,7 +119,7 @@ app.get("/recoverMana", (req, res) => {
     player.mp = player.mp + +amount
     resourceChecker()
     console.log("post recovery mp:", player.mp)
-    res.send()
+    res.send(`\x1b[36mRecovered mana\x1b[0m`)
 })
 
 app.get("/useItem", (req, res) => {
@@ -127,4 +127,14 @@ app.get("/useItem", (req, res) => {
     let itemIndex = player.items.indexOf(item)
     let killItem = player.items.splice(itemIndex, 1)
     res.send(`Used ${killItem}`)
+})
+
+app.get("/heartCrystal", (req, res) => {
+    player.maxHP = player.maxHP + 50
+    res.send("\x1b[32mYou absorb the crystal and your maximum health has increased!\x1b[0m")
+})
+
+app.get("/manaCrystal", (req, res) => {
+    player.maxMP = player.maxMP + 50
+    res.send("\x1b[36mYou abosrb the crystal and your maximum mana has increased!\x1b[0m")
 })

@@ -1,21 +1,21 @@
 __________Items__________
-1) chainmail : 0.8x damage taken
-2) steel sword: 1.2x damage dealt
-3) dagger: 30% chance of double normal attack
-4) buckler: 20% chance of auto block at end of player turn
-5) hp potion: heals 30% of hp whenever you want
-6) healing fairy: instantly heals 60% of hp
-7) mana potion: heals 50% of mp whenever you want
-8) mana fairy: heals 100% of mp instantly
-9) spear: 1.2x damage dealt
-10) helmet: 0.8x damage taken
-11) power necklace: improves power charge to 3x damage done
-12) strength bracelet: improves power swing to 2.5x damage
-13) heart crystal: raises max hp by 50
-14) mana crystal: raises max mp by 50
+x - 1) chainmail : 0.8x damage taken
+x - 2) steel sword: 1.3x damage dealt
+x - 3) dagger: 50% chance of double normal attack
+x - 4) buckler: 20% chance of auto block at end of player turn
+x - 5) hp potion: heals 30% of hp whenever you want
+x - 6) healing fairy: instantly heals 60% of hp
+x - 7) mana potion: heals 50% of mp whenever you want
+x - 8) mana fairy: heals 100% of mp instantly
+x - 9) spear: 1.3x damage dealt
+x - 10) helmet: 0.8x damage taken
+x - 11) power necklace: improves power charge to 3x damage done
+x - 12) strength bracelet: improves power swing to 2.5x damage
+x - 13) heart crystal: raises max hp by 50
+x - 14) mana crystal: raises max mp by 50
 15) swift shoes: 10% chance of dodge
 16) poison edge: deals flat 10 damage per turn after applied
 17) mega hammer: grants special smash action: 100 mana for 5x damage
 18) summoning scroll: gives summon clone action: deals 50% of your damage
 19) ressurection fairy: gives you an extra life
-20) smoke bomb: escapes from battle
+x - 20) smoke bomb: escapes from battle

@@ -25,6 +25,24 @@ let goldCheck = async () => {
 let itemPusher = async (item) => {
   let serverReq = await fetch(`http://localhost:4000/itemPush?item=${item}`);
   let itemPushed = serverReq.text();
+  if(await checkItem("Healing fairy") === "true") {
+    console.log(await healing(75))
+    await useItem("Healing fairy")
+  }
+  if(await checkItem("Mana fairy") === "true") {
+    console.log(await recoverMana(100))
+    await useItem("Mana fairy")
+  }
+  if(await checkItem("Heart Crystal") === "true") {
+    console.log(await heartCrystal())
+    await healing(50)
+    await useItem("Heart Crystal")
+  }
+  if(await checkItem("Mana Crystal") === "true") {
+    console.log(await manaCrystal())
+    await recoverMana(50)
+    await useItem("Mana Crystal")
+  }
   return itemPushed;
 };
 
@@ -65,8 +83,9 @@ let spendMana = async (v) => {
 }
 
 let recoverMana = async (v) => {
-    await fetch(`http://localhost:4000/recoverMana?amount=${v}`);
-    return
+    let serverReq = await fetch(`http://localhost:4000/recoverMana?amount=${v}`);
+    let recoveryMessage = serverReq.text()
+    return recoveryMessage
   };
 
 let checkItem = async(v) => {
@@ -87,4 +106,16 @@ let useItem = async(v) => {
     return usedItem
 }
 
-export {useItem, countItem, checkItem, recoverMana, manaCheck, spendMana, printItems, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset}
+let heartCrystal = async() => {
+    let serverReq = await fetch('http://localhost:4000/heartCrystal')
+    let itemMessage = await serverReq.text()
+    return itemMessage
+}
+
+let manaCrystal = async() => {
+    let serverReq = await fetch('http://localhost:4000/manaCrystal')
+    let itemMessage = await serverReq.text()
+    return itemMessage
+}
+
+export {manaCrystal, heartCrystal, useItem, countItem, checkItem, recoverMana, manaCheck, spendMana, printItems, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset}

@@ -45,6 +45,10 @@ const enemyList = [
   { name: "Dungeon Ogre", hp: 400}
 ];
 
+const dCoin = () => {
+  return Math.floor(Math.random() * 2);
+};
+
 const d10 = () => {
   return Math.floor(Math.random() * 10);
 };
@@ -57,4 +61,4 @@ const dItem = () => {
   return Math.floor(Math.random() * itemList.length);
 };
 
-export {itemList, enemyList, d10, d20, dItem };
+export {itemList, enemyList, d10, d20, dItem, dCoin };
