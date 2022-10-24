@@ -17,7 +17,7 @@ const itemList = [
   "Poison Edge",
   "Mega Hammer",
   "Summoning Scroll",
-  "Ressurection fairy",
+  "Resurrection fairy",
   "Smoke Bomb",
 ];
 

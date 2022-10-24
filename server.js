@@ -132,10 +132,10 @@ app.get("/heartCrystal", (req, res) => {
 
 app.get("/manaCrystal", (req, res) => {
     player.maxMP = player.maxMP + 50
-    res.send("\x1b[36mYou abosrb the crystal and your maximum mana has increased!\x1b[0m")
+    res.send("\x1b[36mYou absorb the crystal and your maximum mana has increased!\x1b[0m")
 })
 
 app.get("/res", (req, res) => {
     player.hp = 50
-    res.send("\x1b[32mThe Ressurection fairy revived you!\x1b[0m")
+    res.send("\x1b[32mThe Resurrection fairy revived you!\x1b[0m")
 })

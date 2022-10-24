@@ -44,11 +44,11 @@ const itemSelector = async () => {
       `There are two items before you, \x1b[36m${item1} (1)\x1b[0m and \x1b[36m${item2} (2)\x1b[0m, choose one carefully.\n`
     );
     if (itemChoice === "1") {
-      console.log(`Recieved \x1b[36m${item1}\x1b[0m`);
+      console.log(`Received \x1b[36m${item1}\x1b[0m`);
       await itemPusher(item1);
       return item1;
     } else if (itemChoice === "2") {
-      console.log(`Recieved \x1b[36m${item2}\x1b[0m`);
+      console.log(`Received \x1b[36m${item2}\x1b[0m`);
       await itemPusher(item2);
       return item2;
     } else {
@@ -96,7 +96,7 @@ const shopSelector = async () => {
   );
   while (true) {
     let shopTransaction = rl.question(
-      "Would you like to buy item 1 (1), item 2 (2), recieve healing (3) or Exit (4)?\n"
+      "Would you like to buy item 1 (1), item 2 (2), receive healing (3) or Exit (4)?\n"
     );
     switch (shopTransaction) {
       case "1":

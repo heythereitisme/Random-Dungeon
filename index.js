@@ -21,7 +21,7 @@ let theGame = async () => {
     console.log(`\nRound ${i}`);
     let mapRoll = await mapSelector();
     console.log(
-      `\nYou proceed throught the dungeon, now walking towards ${mapRoll}`
+      `\nYou proceed through the dungeon, now walking towards ${mapRoll}`
     );
     switch (mapRoll) {
       case "a healing shrine!":
@@ -31,7 +31,7 @@ let theGame = async () => {
       case "a Treasure!":
         let treasure = itemRoller(dItem());
         console.log(
-          `\x1b[33myou come across a treasure chest, you open it.\x1b[0m\nRecieved \x1b[36m${treasure}\x1b[0m and \x1b[33m50 gold!\x1b[0m`
+          `\x1b[33myou come across a treasure chest, you open it.\x1b[0m\nReceived \x1b[36m${treasure}\x1b[0m and \x1b[33m50 gold!\x1b[0m`
         );
         await mint(50);
         await itemPusher(treasure);
@@ -40,7 +40,7 @@ let theGame = async () => {
         battleResults = await battleTime(d20(), false);
         if (battleResults === true) {
           console.log("You won!");
-          console.log("The enemy was guarding an altar containing two items resmembling the one at the entrance.");
+          console.log("The enemy was guarding an altar containing two items resembling the one at the entrance.");
           itemSelector();
           console.log(await mint(50));
           break;
