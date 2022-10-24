@@ -1,6 +1,7 @@
 import { checkItem, countItem, damage, healing, healthCheck, manaCheck, printItems, recoverMana, res, spendMana, useItem } from "./server-functions.js";
 import { d10, d20, dCoin, enemyList} from "./variables-objects.js";
 import rl from "readline-sync";
+import { bruteCounter, swordParry } from "./enemy-skills.js";
 
 const skillMenu = ["Power Slash", "Power Charge"]
 
@@ -14,6 +15,16 @@ let mpPots = []
 let smokeBombs = []
 let poison;
 let clone = false;
+let bruteRetaliate = false;
+let shield = false;
+let knightBuff = false;
+let playerPoison = false;
+let parry = false;
+let reload = 0;
+let gskCharge = false;
+let intangible = false;
+let tangle = 0
+let speed = false;
 
 let enemyBlockChecker = (dv) => {
   if (enemyDefFlag === true) {
@@ -48,7 +59,9 @@ return Math.round(dv)
 };
 
 let enemyBattleRoll = () => {
-  return 5 + d20();
+  if(knightBuff === true){
+    return Math.round((5 + d20()) * 1.3)
+  } else return 5 + d20();
 };
 
 const enemyRoll = () => Math.floor(Math.random() * 4);
@@ -64,6 +77,15 @@ const damageReduction = async(dv) => {
         console.log("\x1b[35mBlocking!\x1b[0m");
         dv = Math.round(dv * 0.2);
       }
+    if(shield === true) {
+      console.log("Blocked entirely!")
+      dv = 0
+    }
+    if(intangible === true){
+      console.log("The ghost cannot be hit!")
+      dv = 0
+    }
+    
     return dv
 }
 
@@ -77,6 +99,8 @@ const battleTime = async (num, e) => {
   }
   poison = false
   clone = false
+  knightBuff = false
+  playerPoison = false
   console.log(`Encountered \x1b[31m${enemy}\x1b[0m`);
   battleloop: while (true) {
     playerDefFlag = false;
@@ -100,6 +124,14 @@ const battleTime = async (num, e) => {
         let cloneAttack = Math.round(attackValue * 0.5)
         console.log(`\x1b[35mYour clone attacks dealing ${cloneAttack} damage!\x1b[0m`)
         enemyHP = enemyHP - cloneAttack
+      }
+      if(bruteRetaliate === true) {
+        let counterDamage = bruteCounter(enemyBattleRoll())
+        await damage(counterDamage)
+      }
+      if(parry === true) {
+        let parryDamage = swordParry(enemyBattleRoll())
+        await damage(parryDamage)
       }
     } else if (playerPhase === "2") { //defend
       console.log("defending");
@@ -216,7 +248,7 @@ const battleTime = async (num, e) => {
         } else {
 
         }}
-    }else if(playerPhase === "5") {
+    }else if(playerPhase === "5") { //print items
       console.log(await printItems())
       continue battleloop;
     } else {
@@ -231,25 +263,37 @@ const battleTime = async (num, e) => {
                 playerDefFlag = true
             }}
     }
-    if (enemyHP > 0) {
+    if(playerPoison === true) {
+      console.log("The poison damages you")
+      console.log(await damage(5))
+    }
+    if(reload > 0) {
+      console.log("The cannoneer is reloading.")
+      reload--
+      continue battleloop
+    }
+    if (enemyHP > 0) { //enemy turn
       let enemydamage = 0;
+      while(true){
       console.log("\x1b[31mEnemy turn\x1b[0m");
       enemyDefFlag = false;
+      bruteCounter = false
+      shield = false
+      intangible = false
       let enemyMove = enemyRoll();
-      if (enemyMove === 0 || enemyMove === 1) {
+      if (enemyMove === 0 || enemyMove === 1) { //attack
         console.log("\x1b[31menemy attacks\x1b[0m");
         if(enemy === "Dungeon Ogre") {
           enemydamage = Math.round(enemyBattleRoll() * 1.5);
         } else {
           enemydamage = enemyBattleRoll();
         }
-        
         enemydamage = await damageReduction(enemydamage);
         console.log(await damage(enemydamage));
-      } else if (enemyMove === 2) {
+      } else if (enemyMove === 2) { //defend
         console.log("\x1b[31menemy defends\x1b[0m");
         enemyDefFlag = true;
-      } else if (enemyMove === 3) {
+      } else if (enemyMove === 3) { //special
         console.log("\x1b[31menemy special\x1b[0m");
         if(enemy === "Dungeon Ogre") {
           enemydamage = Math.round(enemyBattleRoll() * 1.5);
@@ -259,7 +303,10 @@ const battleTime = async (num, e) => {
         enemydamage = Math.round(enemydamage * 1.2);
         enemydamage = await damageReduction(enemydamage);
         console.log(await damage(enemydamage));
-      }
+        if(speed === true) {
+          continue
+        } else {break}
+      }}
     } else {
       return true;
     }
@@ -275,7 +322,7 @@ const battleTime = async (num, e) => {
         await useItem("Resurrection fairy")
         continue
       }
-      return false;
+        return false;
     }
   }
 };

@@ -17,5 +17,5 @@ __________Items__________
 16) poison edge: deals flat 10 damage per turn after applied
 17) mega hammer: grants special smash action: 100 mana for 6x damage
 18) summoning scroll: gives summon clone action: deals 50% of your damage
-19) ressurection fairy: gives you an extra life
+19) resurrection fairy: gives you an extra life
 20) smoke bomb: escapes from battle

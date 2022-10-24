@@ -6,8 +6,6 @@ import { battleTime } from "./battle.js";
 
 let battleResults;
 
-// game zone
-
 let theGame = async () => {
   await resourceReset();
   console.log("Welcome to Random Dungeon!\n\nYou stand at the entrance of a giant dungeon, with many twisting paths! You have only your sword, 50 gold coins and a handful of potions with you. This will be a tough battle.\n");
