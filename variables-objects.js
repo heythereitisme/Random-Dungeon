@@ -28,7 +28,7 @@ const enemyList = [
   { name: "Vampire", hp: 70 },
   { name: "Golem", hp: 100 },
   { name: "Shield Knight", hp: 70},
-  { name: "Knight", hp: 70 },
+  { name: "Knight", hp: 80 },
   { name: "Assassin", hp: 60 },
   { name: "Dual Blader", hp: 60 },
   { name: "Holy Knight", hp: 80 },
