@@ -1,5 +1,8 @@
 import { battleTime } from "./battle.js"
-import { checkItem, countItem, resourceReset } from "./server-functions.js"
+import { checkItem, countItem, res, resourceReset } from "./server-functions.js"
+import {MongoClient} from "mongodb"
+import fetch from "node-fetch"
 
-resourceReset()
-await battleTime(2, true)
+
+
+console.log(await test("obama"))
