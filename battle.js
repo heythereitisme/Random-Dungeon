@@ -1,7 +1,6 @@
 import { checkItem, countItem, damage, healing, healthCheck, manaCheck, printItems, recoverMana, res, spendMana, useItem } from "./server-functions.js";
 import { d10, d20, dCoin, enemyList} from "./variables-objects.js";
 import rl from "readline-sync";
-// import { bruteCounter, swordParry, special } from "./enemy-skills.js";
 
 const skillMenu = ["Power Slash", "Power Charge"]
 
@@ -41,8 +40,8 @@ let special = async(dv, enemy) => {
         }
         return await damage(dv)
     } else if(enemy === "Goblin Brute"){
-        console.log("\x1b[31mThe brute takes a defensive stance, ready to counter any attack!\x1b[0m")
         bruteRetaliate = true
+        return("\x1b[31mThe brute takes a defensive stance, ready to counter any attack!\x1b[0m")
     } else if(enemy === "Vampire"){
         console.log("\x1b[31mThe vampire sucks your blood!\x1b[0m")
         enemyHP = enemyHP + dv
@@ -62,7 +61,7 @@ let special = async(dv, enemy) => {
     } else if(enemy === "Assassin"){
         console.log("\x1b[32mYou are cut with a poisoned blade! You are poisoned!\x1b[0m")
         playerPoison = true
-        return damage(dv)
+        return await damage(dv)
     } else if(enemy === "Dual Blader"){
         console.log("\x1b[31mWielding both blades, the Dual Blader strikes twice!\x1b[0m")
         console.log(await damage(dv))
@@ -113,7 +112,7 @@ let special = async(dv, enemy) => {
         return await damage(dv)
     } else if(enemy === "Mummy"){
         tangle++
-        console.log("The mummy tangles you in it's bandages, it gets tighter after every use!")
+        console.log("\x1b[32mThe mummy tangles you in it's bandages, it gets tighter after every use!\x1b[0m")
         dv = (dv * tangle)
         return await damage(dv)
     } else if(enemy === "Quickblader"){
@@ -187,6 +186,7 @@ let enemyBattleRoll = () => {
   } 
   if(bossCharge === true){
     console.log("\x1b[31mGiga slam!\x1b[0m")
+    bossCharge = false
     return ((5 + d20()) * 3)
   }
   else return 5 + d20();
@@ -246,11 +246,13 @@ const battleTime = async (num, e) => {
         enemyHP = enemyHP - cloneAttack
       }
       if(bruteRetaliate === true) {
+        if(enemyHP > 0) {
         console.log(await bruteCounter(enemyBattleRoll()))
-      }
+      }}
       if(parry === true) {
+        if(enemyHP > 0) {
         console.log(await swordParry(enemyBattleRoll()))
-      }
+      }}
     } else if (playerPhase === "2") { //defend
       console.log("defending");
       playerDefFlag = true;
@@ -385,12 +387,13 @@ const battleTime = async (num, e) => {
       console.log("\x1b[32mThe poison damages you\x1b[0m")
       console.log(await damage(5))
     }
-    if(reload > 0) {
-      console.log("\x1b[31mThe cannoneer is reloading.\x1b[0m")
-      reload--
-      continue battleloop
-    }
+    
     if (enemyHP > 0) { //enemy turn
+      if(reload > 0) {
+        console.log("\x1b[31mThe cannoneer is reloading.\x1b[0m")
+        reload--
+        continue battleloop
+      }
       let enemydamage = 0;
       while(true){
       console.log("\x1b[31mEnemy turn\x1b[0m");
