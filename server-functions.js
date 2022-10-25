@@ -136,4 +136,17 @@ let res = async() => {
     return resMessage
 }
 
-export {res, manaCrystal, heartCrystal, useItem, countItem, checkItem, recoverMana, manaCheck, spendMana, printItems, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset}
+let leaderBoardPrint = async() => {
+  let serverReq = await fetch("http://localhost:4000/leaderboard")
+  let please = await serverReq.json()
+  console.log("Leaderboard:")
+  return please
+}
+
+let submitScore = async(n) => {
+  let serverReq = await fetch(`http://localhost:4000/lbAdd?name=${n}`, {method:'POST'})
+  let message = await serverReq.text()
+  return message
+}
+
+export {submitScore, leaderBoardPrint, res, manaCrystal, heartCrystal, useItem, countItem, checkItem, recoverMana, manaCheck, spendMana, printItems, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset}

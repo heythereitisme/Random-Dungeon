@@ -1,9 +1,31 @@
 import express, { query, response } from "express";
+import { MongoClient } from "mongodb";
+import {leaderboard, addLB} from "./mongo.js"
+
 const app = express();
+const uri = "mongodb+srv://cobi:rWKvjjKAqcMkdCLn@cluster0.re6ncy3.mongodb.net/?retryWrites=true&w=majority"
+const client = new MongoClient(uri);
+
+async function main() {
+	const uri = "mongodb+srv://cobi:rWKvjjKAqcMkdCLn@cluster0.re6ncy3.mongodb.net/?retryWrites=true&w=majority"
+    const client = new MongoClient(uri);
+    try {
+        await client.connect();
+    } catch (e) {
+        console.error(e);
+    }finally {
+        await client.close();
+    }
+}
+
+async function addScore(client, newScore){
+    const result = await client.db("Random_Dungeon").collection("Leaderboard").insertOne(newScore);
+    console.log(`New listing created with the following id: ${result.insertedId}`);
+}
 
 const PORT = process.env.PORT || 4000
 
-const player = {hp: 100, maxHP: 100, mp: 100, maxMP: 100, items: ["HP Potion", "MP Potion"], gold: 50}
+const player = {hp: 100, maxHP: 100, mp: 100, maxMP: 100, items: ["HP Potion", "MP Potion"], gold: 50, score: 600}
 
 
 app.listen(PORT, function() {
@@ -138,4 +160,19 @@ app.get("/manaCrystal", (req, res) => {
 app.get("/res", (req, res) => {
     player.hp = 50
     res.send("\x1b[32mThe Resurrection fairy revived you!\x1b[0m")
+})
+
+app.get("/leaderboard", async(req, res) => {
+    res.send(await leaderboard(client))
+})
+
+app.post("/lbAdd", async(req, res) => {
+    let addName = req.query.name
+    let addScore = player.score
+    await addLB(client,
+        {
+            name: addName,
+            score: addScore
+        })
+    res.send("Added to leaderboard!")
 })

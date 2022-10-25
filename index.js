@@ -1,6 +1,6 @@
 import {shopSelector, mapSelector, itemSelector, itemRoller} from "./game-flow-functions.js"
 import {d20, dItem} from "./variables-objects.js"
-import {printItems, mint, healing, itemPusher,resourceReset, recoverMana} from "./server-functions.js"
+import {printItems, mint, healing, itemPusher,resourceReset, recoverMana, leaderBoardPrint, submitScore} from "./server-functions.js"
 import rl from "readline-sync"
 import { battleTime } from "./battle.js";
 
@@ -8,6 +8,8 @@ let battleResults;
 
 let theGame = async () => {
   await resourceReset();
+  console.log(await leaderBoardPrint())
+  rl.prompt()
   console.log("Welcome to Random Dungeon!\n\nYou stand at the entrance of a giant dungeon, with many twisting paths! You have only your sword, 50 gold coins and a handful of potions with you. This will be a tough battle.\n");
   let playerName = rl.question("What is your name adventurer?\n");
   console.log(`\nWelcome to the dungeon ${playerName}, ahead of you lies many paths, choose wisely.`);
@@ -81,6 +83,8 @@ let theGame = async () => {
   }
 
   console.log("Final items:", await printItems());
+  console.log(await submitScore(playerName))
+  console.log(await leaderBoardPrint())
 };
 
 theGame();
