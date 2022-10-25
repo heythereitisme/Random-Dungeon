@@ -1,6 +1,6 @@
 import rl from "readline-sync";
-import { itemList, enemyList, d10, d20, dItem } from "./variables-objects.js";
-import {printItems, mint, spend, damage, healing,  itemPusher,  goldCheck, healthCheck, resourceReset, recoverMana,} from "./server-functions.js";
+import { itemList, d10, dItem } from "./variables-objects.js";
+import {spend, healing,  itemPusher,  goldCheck, healthCheck, recoverMana,} from "./server-functions.js";
 
 let resourceChecker = () => {
   if (player.hp > player.maxHP) {

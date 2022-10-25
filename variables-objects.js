@@ -35,7 +35,7 @@ const enemyList = [
   { name: "Fire Mage", hp: 60 },
   { name: "Ice Mage", hp: 70 },
   { name: "Living Bomb", hp: 50 },
-  { name: "Flying sword", hp:60 },
+  { name: "Flying Sword", hp:60 },
   { name: "Cannoneer", hp: 60 },
   { name: "Armored Knight", hp: 100 },
   { name: "Greatsword Knight", hp: 70 },

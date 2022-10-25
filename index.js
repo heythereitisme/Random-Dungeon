@@ -1,6 +1,6 @@
-import {shopSelector, mapSelector, itemSelector, itemRoller, mapReRoller, mapRoller, resourceChecker} from "./game-flow-functions.js"
-import {d10, d20, dItem} from "./variables-objects.js"
-import {printItems, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset, recoverMana} from "./server-functions.js"
+import {shopSelector, mapSelector, itemSelector, itemRoller} from "./game-flow-functions.js"
+import {d20, dItem} from "./variables-objects.js"
+import {printItems, mint, healing, itemPusher,resourceReset, recoverMana} from "./server-functions.js"
 import rl from "readline-sync"
 import { battleTime } from "./battle.js";
 

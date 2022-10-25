@@ -1,7 +1,5 @@
-import { checkItem, countItem } from "./server-functions.js"
+import { battleTime } from "./battle.js"
+import { checkItem, countItem, resourceReset } from "./server-functions.js"
 
-let testFunction = async() => {
-    return(await countItem("HP Potion"))
-}
-
-console.log(await testFunction())
+resourceReset()
+await battleTime(20, true)

@@ -11,11 +11,11 @@ __________Items__________
 10) helmet: 0.8x damage taken
 11) power necklace: improves power charge to 2.5x damage done
 12) strength bracelet: improves power swing to 2.5x damage
-13) heart crystal: raises max hp by 50
-14) mana crystal: raises max mp by 50
-15) swift shoes: 10% chance of dodge
-16) poison edge: deals flat 10 damage per turn after applied
+13) heart crystal: raises max hp and current hp by 50
+14) mana crystal: raises max mp and current mp by 50
+15) swift shoes: 10% chance of dodging any enemy attack
+16) poison edge: deals flat 10 damage per turn after applied (by attacks)
 17) mega hammer: grants special smash action: 100 mana for 6x damage
 18) summoning scroll: gives summon clone action: deals 50% of your damage
-19) resurrection fairy: gives you an extra life
-20) smoke bomb: escapes from battle
+19) resurrection fairy: revives you at 50 hp if you die
+20) smoke bomb: escapes any non boss battle (counts as a win)

@@ -1,7 +1,7 @@
 import { checkItem, countItem, damage, healing, healthCheck, manaCheck, printItems, recoverMana, res, spendMana, useItem } from "./server-functions.js";
 import { d10, d20, dCoin, enemyList} from "./variables-objects.js";
 import rl from "readline-sync";
-import { bruteCounter, swordParry } from "./enemy-skills.js";
+// import { bruteCounter, swordParry, special } from "./enemy-skills.js";
 
 const skillMenu = ["Power Slash", "Power Charge"]
 
@@ -16,7 +16,7 @@ let smokeBombs = []
 let poison;
 let clone = false;
 let bruteRetaliate = false;
-let shield = false;
+let greatShield = false;
 let knightBuff = false;
 let playerPoison = false;
 let parry = false;
@@ -25,13 +25,136 @@ let gskCharge = false;
 let intangible = false;
 let tangle = 0
 let speed = false;
+let bossCharge = false;
+
+let special = async(dv, enemy) => {
+    if(enemy === "Goblin Warrior") {
+        console.log("\x1b[31mGoblin Warrior uses Power Slash!\x1b[0m")
+        dv = Math.round(dv * 1.5)
+        return await damage(dv)
+    } else if(enemy === "Goblin Archer"){
+        console.log('\x1b[31mGoblin Archer readies "True Strike"\x1b[0m')
+        dv = Math.round(dv * 1.2)
+        if(d10() === 0) {
+            console.log("\x1b[31mA critical strike!\x1b[0m")
+            dv = dv * 2
+        }
+        return await damage(dv)
+    } else if(enemy === "Goblin Brute"){
+        console.log("\x1b[31mThe brute takes a defensive stance, ready to counter any attack!\x1b[0m")
+        bruteRetaliate = true
+    } else if(enemy === "Vampire"){
+        console.log("\x1b[31mThe vampire sucks your blood!\x1b[0m")
+        enemyHP = enemyHP + dv
+        return await damage(dv)
+    } else if(enemy === "Golem"){
+        console.log("\x1b[31mThe golem slams the ground!\x1b[0m")
+        dv = Math.round(dv * 1.2)
+        return await damage(dv)
+    } else if(enemy === "Shield Knight"){
+        greatShield = true
+        return ("\x1b[31mThe Knight raises his shield, fully blocking all attacks!\x1b[0m")
+    } else if(enemy === "Knight"){
+        if(knightBuff === false) {
+            knightBuff = true
+            return("\x1b[31mThe Knight with a determined look in his eye raises his power!\x1b[0m")
+            } else return await damage(dv)
+    } else if(enemy === "Assassin"){
+        console.log("\x1b[32mYou are cut with a poisoned blade! You are poisoned!\x1b[0m")
+        playerPoison = true
+        return damage(dv)
+    } else if(enemy === "Dual Blader"){
+        console.log("\x1b[31mWielding both blades, the Dual Blader strikes twice!\x1b[0m")
+        console.log(await damage(dv))
+        return await damage(dv)
+    } else if(enemy === "Holy Knight"){
+        enemyHP = enemyHP + 20
+        return("\x1b[32mThe Knight casts a healing spell and gains 20 health!\x1b[0m")
+    } else if(enemy === "Fire Mage"){
+        console.log("\x1b[31mThe mage casts Fireball!\x1b[0m")
+        dv = dv * 2
+        return await damage(dv)
+    } else if(enemy === "Ice Mage"){
+        console.log("\x1b[36mThe mage casts Ice Lance!\x1b[0m")
+        dv = Math.round(dv * 1.6)
+        return await damage(dv)
+    } else if(enemy === "Living Bomb"){
+        console.log("\x1b[31mThe bomb self destructs!\x1b[0m")
+        dv = dv * 3
+        enemyHP = 0
+        return await damage(dv)
+    } else if(enemy === "Flying Sword"){
+        parry = true
+        return("\x1b[31mThe sword takes a parrying stance, attack with caution!\x1b[0m")
+    } else if(enemy === "Cannoneer"){
+        console.log("\x1b[31mThe cannoneer fires a great blast, but he has to reload!\x1b[0m")
+        dv = dv * 3
+        reload = 2
+        return await damage(dv)
+    } else if(enemy === "Armored Knight"){
+        console.log("\x1b[31mThe knight performs a defensive charge, activating his guard!\x1b[0m")
+        dv = Math.round(dv * 0.2)
+        enemyDefFlag = true
+        return await damage(dv)
+    } else if(enemy === "Greatsword Knight"){
+        if(gskCharge === false) {
+            gskCharge = true
+            return("\x1b[31mThe knight prepares a devastating strike!\x1b[0m")
+        } else {
+            console.log("\x1b[31mThe knight delivers his most powerful move!\x1b[0m")
+            dv = Math.round(dv * 3)
+            gskCharge = false
+            return await damage(dv)
+        }
+    } else if(enemy === "Ghost"){
+        console.log("\x1b[31mThe ghosts jumps inside of you!\x1b[0m")
+        intangible = true
+        dv = Math.round(dv * 0.2)
+        return await damage(dv)
+    } else if(enemy === "Mummy"){
+        tangle++
+        console.log("The mummy tangles you in it's bandages, it gets tighter after every use!")
+        dv = (dv * tangle)
+        return await damage(dv)
+    } else if(enemy === "Quickblader"){
+        console.log("\x1b[31mThe quickblader uses his speed to gain an extra turn!\x1b[0m")
+        speed = true
+        return await damage(dv)
+    } else if(enemy === "Dungeon Ogre"){
+        bossCharge = true
+        return("\x1b[31mThe Ogre Charges up his next attack! Be careful!\x1b[0m")
+    }
+}
+
+let bruteCounter = async(dv) => {
+    console.log("Countered!")
+    dv = Math.round(dv * 1.5)
+    bruteRetaliate = false
+    return await damage(dv)
+}
+
+let swordParry = async(dv) => {
+    console.log("Parried!")
+    dv = Math.round(dv * 2)
+    parry = false
+    return await damage(dv)
+}
 
 let enemyBlockChecker = (dv) => {
   if (enemyDefFlag === true) {
     console.log("\x1b[31mYour attack was blocked!\x1b[0m");
     return Math.round(dv * 0.5);
-  } else return dv;
-};
+  } else {
+    if(greatShield === true) {
+        console.log("\x1b[31mBlocked entirely!\x1b[0m")
+        dv = 0
+      }
+      if(intangible === true){
+        console.log("\x1b[31mThe ghost cannot be hit!\x1b[0m")
+        dv = 0
+      }
+      return dv
+  }};
 
 const playerBattleRoll = async() => {
   let dv = 10 + d20();
@@ -61,7 +184,12 @@ return Math.round(dv)
 let enemyBattleRoll = () => {
   if(knightBuff === true){
     return Math.round((5 + d20()) * 1.3)
-  } else return 5 + d20();
+  } 
+  if(bossCharge === true){
+    console.log("\x1b[31mGiga slam!\x1b[0m")
+    return ((5 + d20()) * 3)
+  }
+  else return 5 + d20();
 };
 
 const enemyRoll = () => Math.floor(Math.random() * 4);
@@ -77,31 +205,23 @@ const damageReduction = async(dv) => {
         console.log("\x1b[35mBlocking!\x1b[0m");
         dv = Math.round(dv * 0.2);
       }
-    if(shield === true) {
-      console.log("Blocked entirely!")
-      dv = 0
-    }
-    if(intangible === true){
-      console.log("The ghost cannot be hit!")
-      dv = 0
-    }
-    
     return dv
 }
 
 const battleTime = async (num, e) => {
-  if (e === true) {
-    enemy = "Elite " + enemyList[num].name;
-    enemyHP = enemyList[num].hp * 2;
-  } else {
     enemy = enemyList[num].name;
+    if (e === true) {
+    enemyHP = enemyList[num].hp * 2;
+    console.log(`Encountered \x1b[31mElite ${enemy}\x1b[0m`);
+  } else {
     enemyHP = enemyList[num].hp;
+    console.log(`Encountered \x1b[31m${enemy}\x1b[0m`);
   }
   poison = false
   clone = false
   knightBuff = false
   playerPoison = false
-  console.log(`Encountered \x1b[31m${enemy}\x1b[0m`);
+  
   battleloop: while (true) {
     playerDefFlag = false;
     console.log("Enemy hp:", enemyHP);
@@ -126,12 +246,10 @@ const battleTime = async (num, e) => {
         enemyHP = enemyHP - cloneAttack
       }
       if(bruteRetaliate === true) {
-        let counterDamage = bruteCounter(enemyBattleRoll())
-        await damage(counterDamage)
+        console.log(await bruteCounter(enemyBattleRoll()))
       }
       if(parry === true) {
-        let parryDamage = swordParry(enemyBattleRoll())
-        await damage(parryDamage)
+        console.log(await swordParry(enemyBattleRoll()))
       }
     } else if (playerPhase === "2") { //defend
       console.log("defending");
@@ -264,11 +382,11 @@ const battleTime = async (num, e) => {
             }}
     }
     if(playerPoison === true) {
-      console.log("The poison damages you")
+      console.log("\x1b[32mThe poison damages you\x1b[0m")
       console.log(await damage(5))
     }
     if(reload > 0) {
-      console.log("The cannoneer is reloading.")
+      console.log("\x1b[31mThe cannoneer is reloading.\x1b[0m")
       reload--
       continue battleloop
     }
@@ -277,8 +395,8 @@ const battleTime = async (num, e) => {
       while(true){
       console.log("\x1b[31mEnemy turn\x1b[0m");
       enemyDefFlag = false;
-      bruteCounter = false
-      shield = false
+      bruteRetaliate = false
+      greatShield = false
       intangible = false
       let enemyMove = enemyRoll();
       if (enemyMove === 0 || enemyMove === 1) { //attack
@@ -300,22 +418,23 @@ const battleTime = async (num, e) => {
         } else {
           enemydamage = enemyBattleRoll();
         }
-        enemydamage = Math.round(enemydamage * 1.2);
         enemydamage = await damageReduction(enemydamage);
-        console.log(await damage(enemydamage));
-        if(speed === true) {
-          continue
-        } else {break}
-      }}
+        console.log(await special(enemydamage, enemy))
+      }
+      if(speed === true) {
+        speed = false
+        continue
+      } else {break}
+    }
     } else {
       return true;
     }
     if(poison === true) {
       enemyHP = enemyHP - 10
       console.log(`\x1b[32mThe ${enemy} takes 10 poison damage!\x1b[0m`)
-      if(enemyHP <= 0) {return true}
     }
-
+    if(enemyHP <= 0) {return true}
+    
     if ((await healthCheck()) <= 0) {
       if(await checkItem("Resurrection fairy") === "true"){
         console.log(await res())
@@ -327,4 +446,4 @@ const battleTime = async (num, e) => {
   }
 };
 
-export { battleTime };
+export { battleTime};
