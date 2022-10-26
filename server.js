@@ -7,7 +7,6 @@ const app = express();
 const client = new MongoClient(uri);
 
 async function main() {
-	const uri = "mongodb+srv://cobi:rWKvjjKAqcMkdCLn@cluster0.re6ncy3.mongodb.net/?retryWrites=true&w=majority"
     const client = new MongoClient(uri);
     try {
         await client.connect();
