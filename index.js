@@ -8,8 +8,8 @@ let battleResults;
 
 let theGame = async () => {
   await resourceReset();
-  console.log(await leaderBoardPrint());
-  await slowDown(5000);
+  // console.log(await leaderBoardPrint());
+  // await slowDown(5000);
   console.log(
     "Welcome to Random Dungeon!\n\nYou stand at the entrance of a giant dungeon, with many twisting paths! A great treasure is said to be at the end! You have only your sword, 50 gold coins and a handful of potions with you. This will be a tough battle.\n"
   );
@@ -116,10 +116,10 @@ let theGame = async () => {
   let items = await printItems();
   await addScore(items.length * 200);
   console.log("Final items:", await printItems());
-  await slowDown(3000);
-  console.log(await submitScore(playerName));
-  await slowDown(1000);
-  console.log(await leaderBoardPrint());
+  // await slowDown(3000);
+  // console.log(await submitScore(playerName));
+  // await slowDown(1000);
+  // console.log(await leaderBoardPrint());
 };
 
 theGame();

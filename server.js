@@ -1,21 +1,21 @@
 import express, { query, response } from "express";
 import { MongoClient } from "mongodb";
-import {leaderboard, addLB} from "./mongo.js"
+// import {leaderboard, addLB} from "./mongo.js"
 import { uri } from "./secret.js";
 
 const app = express();
-const client = new MongoClient(uri);
+// const client = new MongoClient(uri);
 
-async function main() {
-    const client = new MongoClient(uri);
-    try {
-        await client.connect();
-    } catch (e) {
-        console.error(e);
-    }finally {
-        await client.close();
-    }
-}
+// async function main() {
+//     const client = new MongoClient(uri);
+//     try {
+//         await client.connect();
+//     } catch (e) {
+//         console.error(e);
+//     }finally {
+//         await client.close();
+//     }
+// }
 
 async function addScore(client, newScore){
     const result = await client.db("Random_Dungeon").collection("Leaderboard").insertOne(newScore);
@@ -169,17 +169,17 @@ app.get("/res", (req, res) => {
     res.send("\x1b[32mThe Resurrection fairy revived you!\x1b[0m")
 })
 
-app.get("/leaderboard", async(req, res) => {
-    res.send(await leaderboard(client))
-})
+// app.get("/leaderboard", async(req, res) => {
+//     res.send(await leaderboard(client))
+// })
 
-app.post("/lbAdd", async(req, res) => {
-    let addName = req.query.name
-    let addScore = player.score
-    await addLB(client,
-        {
-            name: addName,
-            score: addScore
-        })
-    res.send("Added to leaderboard!")
-})
+// app.post("/lbAdd", async(req, res) => {
+//     let addName = req.query.name
+//     let addScore = player.score
+//     await addLB(client,
+//         {
+//             name: addName,
+//             score: addScore
+//         })
+//     res.send("Added to leaderboard!")
+// })
