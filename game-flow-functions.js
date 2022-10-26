@@ -72,9 +72,9 @@ const mapSelector = async () => {
     let mapSelection = rl.question(
       "Do you want to get left (L) or right (R)?\n"
     );
-    if (mapSelection === "L") {
+    if (mapSelection.toUpperCase() === "L") {
       return leftMap;
-    } else if (mapSelection === "R") {
+    } else if (mapSelection.toUpperCase() === "R") {
       return rightMap;
     } else {
       console.log('invalid command, please type "L" or "R".');
