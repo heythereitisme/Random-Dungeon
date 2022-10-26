@@ -1,9 +1,9 @@
 import express, { query, response } from "express";
 import { MongoClient } from "mongodb";
 import {leaderboard, addLB} from "./mongo.js"
+import { uri } from "./secret.js";
 
 const app = express();
-const uri = "mongodb+srv://cobi:rWKvjjKAqcMkdCLn@cluster0.re6ncy3.mongodb.net/?retryWrites=true&w=majority"
 const client = new MongoClient(uri);
 
 async function main() {
@@ -25,7 +25,7 @@ async function addScore(client, newScore){
 
 const PORT = process.env.PORT || 4000
 
-const player = {hp: 100, maxHP: 100, mp: 100, maxMP: 100, items: ["HP Potion", "MP Potion"], gold: 50, score: 600}
+const player = {hp: 100, maxHP: 100, mp: 100, maxMP: 100, items: ["HP Potion", "MP Potion"], gold: 50, score: 0}
 
 
 app.listen(PORT, function() {
@@ -48,6 +48,7 @@ app.get("/reset", (req, res) => {
     player.mp = 100
     player.items = ["HP Potion", "MP Potion"]
     player.gold = 50
+    player.score = 0
     res.send()
 })
 
@@ -138,6 +139,13 @@ app.get("/recoverMana", (req, res) => {
     resourceChecker()
     console.log("post recovery mp:", player.mp)
     res.send(`\x1b[36mRecovered mana\x1b[0m`)
+})
+
+app.get("/addScore", (req, res) => {
+    let amount = req.query.amount
+    player.score = player.score + +amount
+    console.log("current score:", player.score)
+    res.send()
 })
 
 app.get("/useItem", (req, res) => {

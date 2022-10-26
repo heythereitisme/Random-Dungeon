@@ -1,5 +1,6 @@
-import { checkItem, countItem, damage, healing, healthCheck, manaCheck, printItems, recoverMana, res, spendMana, useItem } from "./server-functions.js";
+import { addScore, checkItem, countItem, damage, healing, healthCheck, manaCheck, printItems, recoverMana, res, spendMana, useItem} from "./server-functions.js";
 import { d10, d20, dCoin, enemyList} from "./variables-objects.js";
+import { slowDown } from "./game-flow-functions.js";
 import rl from "readline-sync";
 
 const skillMenu = ["Power Slash", "Power Charge"]
@@ -112,7 +113,7 @@ let special = async(dv, enemy) => {
         return await damage(dv)
     } else if(enemy === "Mummy"){
         tangle++
-        console.log("\x1b[32mThe mummy tangles you in it's bandages, it gets tighter after every use!\x1b[0m")
+        console.log("\x1b[31mThe mummy tangles you in it's bandages, it gets tighter after every use!\x1b[0m")
         dv = (dv * tangle)
         return await damage(dv)
     } else if(enemy === "Quickblader"){
@@ -174,6 +175,7 @@ chargeFlag = false
 if(poison === false) {
   if(await checkItem("Poison Edge") === "true"){
     console.log(`\x1b[32mThe ${enemy} is poisoned!\x1b[0m`)
+    await addScore(50)
     poison = true
   }
 }
@@ -217,11 +219,15 @@ const battleTime = async (num, e) => {
     enemyHP = enemyList[num].hp;
     console.log(`Encountered \x1b[31m${enemy}\x1b[0m`);
   }
+  await slowDown(1000)
   poison = false
   clone = false
   knightBuff = false
   playerPoison = false
-  
+  bruteRetaliate = false
+  parry = false
+  reload = 0
+
   battleloop: while (true) {
     playerDefFlag = false;
     console.log("Enemy hp:", enemyHP);
@@ -234,27 +240,36 @@ const battleTime = async (num, e) => {
       let attackValue = await playerBattleRoll();
       attackValue = enemyBlockChecker(attackValue);
       console.log(`\x1b[35mDealt ${attackValue} damage\x1b[0m`);
+      await slowDown(1000)
+      await addScore(attackValue)
       enemyHP = enemyHP - attackValue;
       if(await checkItem("Dagger") === "true") {
         if(dCoin() === 0){
         console.log(`\x1b[35mYour dagger slices true. Dealt ${attackValue} damage\x1b[0m`)
+        await slowDown(1000)
+        await addScore(attackValue)
         enemyHP = enemyHP - attackValue;
       }}
       if(clone === true){
         let cloneAttack = Math.round(attackValue * 0.5)
         console.log(`\x1b[35mYour clone attacks dealing ${cloneAttack} damage!\x1b[0m`)
+        await slowDown(1000)
+        await addScore(cloneAttack)
         enemyHP = enemyHP - cloneAttack
       }
       if(bruteRetaliate === true) {
         if(enemyHP > 0) {
         console.log(await bruteCounter(enemyBattleRoll()))
+        await slowDown(1000)
       }}
       if(parry === true) {
         if(enemyHP > 0) {
         console.log(await swordParry(enemyBattleRoll()))
+        await slowDown(1000)
       }}
     } else if (playerPhase === "2") { //defend
-      console.log("defending");
+      console.log("\x1b[35mdefending\x1b[0m");
+      await slowDown(1000)
       playerDefFlag = true;
     } else if (playerPhase === "3") { //skills
       let skillNumbers = skillMenu.length;
@@ -279,10 +294,14 @@ const battleTime = async (num, e) => {
               }
               attackValue = enemyBlockChecker(attackValue);
               console.log(`\x1b[35mDealt ${attackValue} damage\x1b[0m`);
+              await slowDown(1000)
+              await addScore(attackValue)
               enemyHP = enemyHP - attackValue;
               if(clone === true){
                 let cloneAttack = Math.round(attackValue * 0.5)
                 console.log(`\x1b[35mYour clone attacks dealing ${cloneAttack} damage!\x1b[0m`)
+                await slowDown(1000)
+                await addScore(cloneAttack)
                 enemyHP = enemyHP - cloneAttack
               }
               break;
@@ -296,6 +315,7 @@ const battleTime = async (num, e) => {
                 console.log(
                   `\x1b[35mUsed ${skill2}! Your next attack's power will be increased!\x1b[0m`
                 );
+                await slowDown(1000)
                 chargeFlag = true;
                 break;
               } else {
@@ -312,10 +332,14 @@ const battleTime = async (num, e) => {
                 let attackValue = Math.round(await playerBattleRoll() * 6)
                 attackValue = enemyBlockChecker(attackValue);
                 console.log(`\x1b[35mDealt ${attackValue} damage\x1b[0m`);
+                await slowDown(1000)
+                await addScore(attackValue)
                 enemyHP = enemyHP - attackValue;
                 if(clone === true){
                   let cloneAttack = Math.round(attackValue * 0.5)
                   console.log(`\x1b[35mYour clone attacks dealing ${cloneAttack} damage!\x1b[0m`)
+                  await slowDown(1000)
+                  await addScore(cloneAttack)
                   enemyHP = enemyHP - cloneAttack
                 }
                 break
@@ -327,6 +351,7 @@ const battleTime = async (num, e) => {
                 if(await manaCheck() >= 50) {
                   console.log(await spendMana(50));
                   console.log("\x1b[35mYou summon a magical clone!\x1b[0m")
+                  await slowDown(1000)
                   clone = true
                   break
                 }else {console.log("You do not have enough mana.")}
@@ -344,12 +369,14 @@ const battleTime = async (num, e) => {
         if(itemInput === "1") {
             if(await checkItem("HP Potion") === "true") {
                 console.log(await healing(50))
+                await slowDown(1000)
                 await useItem("HP Potion")
                 break
             } else {console.log("No HP Potions.")}
         } else if(itemInput === "2"){
             if(await checkItem("MP Potion") === "true") {
                 console.log(await recoverMana(50))
+                await slowDown(1000)
                 await useItem("MP Potion")
                 break
             } else {console.log("No MP Potions.")}
@@ -359,6 +386,7 @@ const battleTime = async (num, e) => {
                   console.log("Cannot escape this battle!")
                 } else {
                   console.log("escaped")
+                  await slowDown(1000)
                   await useItem("Smoke Bomb")
                   return true
                 }
@@ -380,23 +408,27 @@ const battleTime = async (num, e) => {
         if(playerDefFlag === false){
             if(bucklerRoll === 0 || bucklerRoll === 1) {
                 console.log("\x1b[35mYou block automatically!\x1b[0m")
+                await slowDown(1000)
                 playerDefFlag = true
             }}
     }
     if(playerPoison === true) {
       console.log("\x1b[32mThe poison damages you\x1b[0m")
       console.log(await damage(5))
+      await slowDown(1000)
     }
     
     if (enemyHP > 0) { //enemy turn
       if(reload > 0) {
         console.log("\x1b[31mThe cannoneer is reloading.\x1b[0m")
+        await slowDown(1000)
         reload--
         continue battleloop
       }
       let enemydamage = 0;
       while(true){
       console.log("\x1b[31mEnemy turn\x1b[0m");
+      await slowDown(1000)
       enemyDefFlag = false;
       bruteRetaliate = false
       greatShield = false
@@ -411,18 +443,17 @@ const battleTime = async (num, e) => {
         }
         enemydamage = await damageReduction(enemydamage);
         console.log(await damage(enemydamage));
+        await slowDown(1000)
       } else if (enemyMove === 2) { //defend
         console.log("\x1b[31menemy defends\x1b[0m");
+        await slowDown(1000)
         enemyDefFlag = true;
       } else if (enemyMove === 3) { //special
         console.log("\x1b[31menemy special\x1b[0m");
-        if(enemy === "Dungeon Ogre") {
-          enemydamage = Math.round(enemyBattleRoll() * 1.5);
-        } else {
           enemydamage = enemyBattleRoll();
-        }
         enemydamage = await damageReduction(enemydamage);
         console.log(await special(enemydamage, enemy))
+        await slowDown(1000)
       }
       if(speed === true) {
         speed = false
@@ -435,12 +466,14 @@ const battleTime = async (num, e) => {
     if(poison === true) {
       enemyHP = enemyHP - 10
       console.log(`\x1b[32mThe ${enemy} takes 10 poison damage!\x1b[0m`)
+      await slowDown(1000)
     }
     if(enemyHP <= 0) {return true}
     
     if ((await healthCheck()) <= 0) {
       if(await checkItem("Resurrection fairy") === "true"){
         console.log(await res())
+        await slowDown(1000)
         await useItem("Resurrection fairy")
         continue
       }

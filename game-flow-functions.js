@@ -91,6 +91,7 @@ const shopSelector = async () => {
   console.log(
     "You come across a small shop, the shopkeeper gestures towards his wares"
   );
+  await slowDown(3000)
   console.log(
     `The items for sale are:\nItem 1: \x1b[36m${item1}\x1b[0m - \x1b[33m50g\x1b[0m\nItem 2: \x1b[36m${item2}\x1b[0m - \x1b[33m50g\x1b[0m\n\x1b[32mFull heal\x1b[0m - \x1b[33m100g\x1b[0m`
   );
@@ -150,8 +151,17 @@ const shopSelector = async () => {
   }
 };
 
+function slowDown(num) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve('resolved');
+      }, num);
+    });
+  }
+
 
 export {
+    slowDown,
   shopSelector,
   mapSelector,
   itemSelector,

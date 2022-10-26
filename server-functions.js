@@ -139,7 +139,7 @@ let res = async() => {
 let leaderBoardPrint = async() => {
   let serverReq = await fetch("http://localhost:4000/leaderboard")
   let please = await serverReq.json()
-  console.log("Leaderboard:")
+  console.log("\n Leaderboard:")
   return please
 }
 
@@ -149,4 +149,8 @@ let submitScore = async(n) => {
   return message
 }
 
-export {submitScore, leaderBoardPrint, res, manaCrystal, heartCrystal, useItem, countItem, checkItem, recoverMana, manaCheck, spendMana, printItems, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset}
+let addScore = async(v) => {
+    await fetch(`http://localhost:4000/addScore?amount=${v}`)
+}
+
+export {addScore, submitScore, leaderBoardPrint, res, manaCrystal, heartCrystal, useItem, countItem, checkItem, recoverMana, manaCheck, spendMana, printItems, mint, spend, damage, healing, itemPusher, goldCheck, healthCheck, resourceReset}
