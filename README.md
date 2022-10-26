@@ -16,3 +16,4 @@
 - There are 5 "rounds" before the final boss
 - The key to victory is to get as many items as possible
 - Defend is strong
+- Power Charge + Power Swing is OP
